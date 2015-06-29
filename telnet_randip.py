@@ -69,17 +69,18 @@ for address in randip():
 			except KeyboardInterrupt:
 				WriteLog()
 				break
+		except socket.timeout:
+			print(socket.timeout, '%s timeout' % address)
+			pass
+		except socket.herror:
+			print(socket.herror, 'Error getting host by address on %s' % address)
+			print '\n'
+			pass
 		except socket.error:
 			print(socket.error, 'Failed to connect to %s' % address)
 			print '\n'
 			a.append(address)
 			pass
-		except socket.timeout:
-			print(timeout, '%s timeout' % address)
-			pass
-		except socket.herror:
-			print(socket.herror, 'Error getting host by address on %s' % address)
-			print '\n'
 	except KeyboardInterrupt:
 		WriteLog()
 		break
