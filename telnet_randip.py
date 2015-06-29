@@ -5,6 +5,7 @@ from random import randint
 a = []
 b = []
 c = []
+d = []
 today = []
 def randip():
     while True:
@@ -38,7 +39,7 @@ for address in randip():
 				tn.write("ls\n")
 				tn.write("exit\n")
 				print tn.read_all()
-				fp.write(tn.read_all())
+				d.append(tn.read_all())
 				tn.close()
 			except EOFError:
 				print(EOFError, address)
@@ -56,6 +57,9 @@ for address in randip():
 				fp.write(')\n')
 				fp.write('Working Host Lookup(')
 				fp.write(str(c))
+				fp.write(')\n')
+				fp.write('Telnet Information(')
+				fp.write(str(d))
 				fp.write(')\n')
 				fp.close()
 				s.close()
@@ -80,6 +84,9 @@ for address in randip():
 		fp.write(')\n')
 		fp.write('Working Host Lookup(')
 		fp.write(str(c))
+		fp.write(')\n')
+		fp.write('Telnet Information(')
+		fp.write(str(d))
 		fp.write(')\n')
 		fp.close()
 		s.close()
