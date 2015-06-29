@@ -37,9 +37,9 @@ fp = open(str(today[0]) + "_randip_log.txt", 'w')
 for address in randip():
 	try:
 		try:
-			#Socket tests with a timeout of 1.3 seconds#
+			#Socket tests with a timeout of 1.8 seconds#
 			s = socket.socket()
-			s.settimeout(1.3)
+			s.settimeout(1.8)
 			s.connect((address, 80))
 			print address, "WORKS!!!"
 			b.append(address)
@@ -71,6 +71,7 @@ for address in randip():
 				break
 		except socket.timeout:
 			print(socket.timeout, '%s timeout' % address)
+			print '\n'
 			pass
 		except socket.herror:
 			print(socket.herror, 'Error getting host by address on %s' % address)
