@@ -26,10 +26,6 @@ for address in randip():
 			print hostbyadr
 			c.append(hostbyadr)
 			print "\n"
-			fp.write(address)
-			fp.write("\n")
-			fp.write(str(hostbyadr))
-			fp.write("\n")
 			print('Beginning Telnet attempt on %s\n' % address)
 			#Default telnet connection using admin as user and password#
 			try:
