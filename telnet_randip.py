@@ -77,6 +77,9 @@ for address in randip():
 		except socket.timeout:
 			print(timeout, '%s timeout' % address)
 			pass
+		except socket.herror:
+			print(socket.herror, 'Error getting host by address on %s' % address)
+			print '\n'
 	except KeyboardInterrupt:
 		WriteLog()
 		break
