@@ -72,10 +72,12 @@ for address in randip():
 		except socket.timeout:
 			print(socket.timeout, '%s timeout' % address)
 			print '\n'
+			a.append(address)
 			pass
 		except socket.herror:
 			print(socket.herror, 'Error getting host by address on %s' % address)
 			print '\n'
+			a.append(address)
 			pass
 		except socket.error:
 			print(socket.error, 'Failed to connect to %s' % address)
