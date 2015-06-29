@@ -66,7 +66,7 @@ for address in randip():
 				print tn.read_all()
 				d.append(tn.read_all())
 			except socket.error:
-				print(socket.error, address)
+				print(socket.error, 'Error Signing in', address)
 				print '\n'
 				e.append(address)	
 			except EOFError:
