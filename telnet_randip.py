@@ -31,7 +31,7 @@ def randip():
     while True:
         yield ".".join(str(randint(1, 255)) for i in range(4))
 
-log = datetime.date.today()
+log = datetime.datetime.now()
 today.append(log)
 fp = open(str(today[0]) + "_randip_log.txt", 'w')
 for address in randip():
