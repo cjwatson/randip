@@ -17,9 +17,9 @@ fp = open(str(today[0]) + "_randip_log.txt", 'w')
 for address in randip():
 	try:
 		try:
-			#Socket tests with a timeout of 0.8 seconds#
+			#Socket tests with a timeout of 1.3 seconds#
 			s = socket.socket()
-			s.settimeout(0.8)
+			s.settimeout(1.3)
 			s.connect((address, 80))
 			print address, "WORKS!!!"
 			b.append(address)
