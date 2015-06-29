@@ -7,6 +7,26 @@ b = []
 c = []
 d = []
 today = []
+def WriteLog():
+	print('Keyboard Interrupt Detected.\n')
+	fp.write('Hosts Attempted(')
+	fp.write(str(a))
+	fp.write(')\n')
+	fp.write('\n')
+	fp.write('Working Hosts(')
+	fp.write(str(b))
+	fp.write(')\n')
+	fp.write('\n')
+	fp.write('Working Host Lookup(')
+	fp.write(str(c))
+	fp.write(')\n')
+	fp.write('\n')
+	fp.write('Telnet Information(')
+	fp.write(str(d))
+	fp.write(')\n')
+	fp.close()
+	s.close()
+		
 def randip():
     while True:
         yield ".".join(str(randint(1, 255)) for i in range(4))
@@ -47,25 +67,7 @@ for address in randip():
 				tn.close()
 				pass
 			except KeyboardInterrupt:
-				print('Keyboard Interrupt Detected.\n')
-				fp.write('Hosts Attempted(')
-				fp.write(str(a))
-				fp.write(')\n')
-				fp.write('\n')
-				fp.write('Working Hosts(')
-				fp.write(str(b))
-				fp.write(')\n')
-				fp.write('\n')
-				fp.write('Working Host Lookup(')
-				fp.write(str(c))
-				fp.write(')\n')
-				fp.write('\n')
-				fp.write('Telnet Information(')
-				fp.write(str(d))
-				fp.write(')\n')
-				fp.close()
-				s.close()
-				tn.close()
+				WriteLog()
 				break
 		except socket.error:
 			print(socket.error, 'Failed to connect to %s' % address)
@@ -76,22 +78,5 @@ for address in randip():
 			print(timeout, '%s timeout' % address)
 			pass
 	except KeyboardInterrupt:
-		print('Keyboard Interrupt Detected.\n')
-		fp.write('Hosts Attempted(')
-		fp.write(str(a))
-		fp.write(')\n')
-		fp.write('\n')
-		fp.write('Working Hosts(')
-		fp.write(str(b))
-		fp.write(')\n')
-		fp.write('\n')
-		fp.write('Working Host Lookup(')
-		fp.write(str(c))
-		fp.write(')\n')
-		fp.write('\n')
-		fp.write('Telnet Information(')
-		fp.write(str(d))
-		fp.write(')\n')
-		fp.close()
-		s.close()
+		WriteLog()
 		break
