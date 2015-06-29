@@ -6,6 +6,7 @@ a = []
 b = []
 c = []
 d = []
+e = []
 today = []
 def WriteLog():
 	print('Keyboard Interrupt Detected.\n')
@@ -24,6 +25,10 @@ def WriteLog():
 	fp.write('Telnet Information(')
 	fp.write(str(d))
 	fp.write(')\n')
+	fp.write('\n')
+	fp.write('Failed Telnet Conncections(')
+	fp.write(str(e))
+	fp.write(')')
 	fp.close()
 	s.close()
 		
@@ -64,6 +69,7 @@ for address in randip():
 			except EOFError:
 				print(EOFError, address)
 				print '\n'
+				e.append(address)
 				tn.close()
 				pass
 			except KeyboardInterrupt:
