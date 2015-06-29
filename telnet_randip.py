@@ -65,12 +65,14 @@ for address in randip():
 				tn.write("exit\n")
 				print tn.read_all()
 				d.append(tn.read_all())
-				tn.close()
+			except socket.error:
+				print(socket.error, address)
+				print '\n'
+				e.append(address)	
 			except EOFError:
 				print(EOFError, address)
 				print '\n'
 				e.append(address)
-				tn.close()
 				pass
 			except KeyboardInterrupt:
 				WriteLog()
