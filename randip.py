@@ -1,5 +1,6 @@
-#Random IP Generator with Socket and Telnet support.#
-import socket, os, time, telnetlib, datetime
+#RandIP 0.5#
+#Random IP Generator with Socket, SSH, and Telnet support.#
+import socket, os, time, telnetlib, datetime, paramiko
 from random import randint
 
 a = []
@@ -7,6 +8,8 @@ b = []
 c = []
 d = []
 e = []
+f = []
+g = []
 today = []
 def WriteLog():
 	print('Keyboard Interrupt Detected.\n')
@@ -29,12 +32,20 @@ def WriteLog():
 	fp.write('Failed Telnet Conncections(')
 	fp.write(str(e))
 	fp.write(')')
+	fp.write('\n')
+	fp.write('SSH Information(')
+	fp.write(str(f))
+	fp.write(')')
+	fp.write('\n')
+	fp.write('Failed SSH(')
+	fp.write(str(g))
+	fp.write(')')
 	fp.close()
 	s.close()
 		
 def randip():
-    while True:
-        yield ".".join(str(randint(1, 255)) for i in range(4))
+	while True:
+		yield ".".join(str(randint(1, 255)) for i in range(int(4)))
 
 log = datetime.datetime.now()
 today.append(log)
@@ -65,14 +76,33 @@ for address in randip():
 				tn.write("exit\n")
 				print tn.read_all()
 				d.append(tn.read_all())
+				try:
+					print('Starting SSH Attempt on %s' % address)
+					SSH = paramiko.SSHClient()
+					SSH.connect(address, username='admin', password='admin')
+					stdin, stdout, stderr = client.exec_command('ls')
+					for line in stdout:
+						print '... ' + line.strip('\n')
+					client.close()
+					f.append(address)
+				except SSHException:
+					print(SSHException, 'SSH Could not connect', address)
+					g.append(address)
+					pass
+				except AuthenticationException:
+					print(AuthenticationException, 'Error logging into SSH' ,  address)
+					g.append(address)
+					pass
+				except KeyboardInterrupt:
+					WriteLog()
+					break
 			except socket.error:
-				print(socket.error, 'Error Signing in', address)
-				print '\n'
-				e.append(address)	
-			except EOFError:
-				print(EOFError, address)
+				print(socket.error, 'Error Signing in or Telnet not accesable', address)
 				print '\n'
 				e.append(address)
+				pass
+			except EOFError:
+				print(EOFError, address)
 				pass
 			except KeyboardInterrupt:
 				WriteLog()
