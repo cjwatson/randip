@@ -75,7 +75,7 @@ for address in randip():
 				print tn.read_all()
 				d.append(tn.read_all())
 			except socket.error:
-				print(socket.error, 'Error Signing in or Telnet not accesable', address)
+				print(socket.error, 'Error Signing in or Telnet not accessible', address)
 				print '\n'
 				e.append(address)
 				pass
@@ -95,10 +95,10 @@ for address in randip():
 				client.close()
 				f.append(address)
 			except socket.timeout:
-				print(socket.timeout, '%s timeout SSH' % address)
+				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
 				g.append(address)
 			except paramiko.ssh_exception.SSHException:
-				print(paramiko.ssh_exception.SSHException, 'SSH Could not connect', address)
+				print(paramiko.ssh_exception.SSHException, 'SSH Could not connect or SSH not accessible', address)
 				g.append(address)
 				pass
 			except paramiko.ssh_exception.AuthenticationException:
