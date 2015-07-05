@@ -96,6 +96,7 @@ for address in randip():
 				f.append(address)
 			except socket.timeout:
 				print(socket.timeout, '%s timeout SSH' % address)
+				g.append(address)
 			except paramiko.ssh_exception.SSHException:
 				print(paramiko.ssh_exception.SSHException, 'SSH Could not connect', address)
 				g.append(address)
