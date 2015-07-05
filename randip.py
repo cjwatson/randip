@@ -1,6 +1,6 @@
 #RandIP 0.5#
 #Random IP Generator with Socket, SSH, and Telnet support.#
-import socket, os, time, telnetlib, datetime, paramiko
+import socket, os, time, telnetlib, paramiko
 from random import randint
 
 a = []
@@ -10,7 +10,7 @@ d = []
 e = []
 f = []
 g = []
-today = []
+timestr = time.strftime("%Y%m%d-%H%M%S")
 def WriteLog():
 	print('Keyboard Interrupt Detected.\n')
 	fp.write('Hosts Attempted(')
@@ -47,9 +47,7 @@ def randip():
 	while True:
 		yield ".".join(str(randint(1, 255)) for i in range(int(4)))
 
-log = datetime.datetime.now()
-today.append(log)
-fp = open(str(today[0]) + "_randip_log.txt", 'w')
+fp = open(str(timestr) + "_randip_log.txt", 'w')
 for address in randip():
 	try:
 		try:
