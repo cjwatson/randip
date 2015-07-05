@@ -9,5 +9,6 @@ Error Handling Informtion:Socket.timeout and Socket.error usually means the same
 
 By default the timeout is 1.8 seconds, this can be modified based on your connection speed and latency but for most connections this should be an acceptable time to determine false and true connections.
 
-Dependencies[paramiko]
+Dependencies(paramiko)
+<br>
 (Linux, Unix, OS X)sudo pip install paramiko or (Windows)python -m pip install paramiko
