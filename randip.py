@@ -63,13 +63,15 @@ for address in randip():
 			c.append(hostbyadr)
 			req = requests.get('http://' + address)
 			if str(req.status_code) == '200':
-				print('Response Code: ' + str(req.status_code) + 'Works')
+				print('Response Code: ' + str(req.status_code) + ' Works')
 			elif str(req.status_code) == '400':
-				print('Response Code: ' + str(req.status_code) + 'Bad Request')
+				print('Response Code: ' + str(req.status_code) + ' Bad Request')
 			elif str(req.status_code) == '401':
-				print('Response Code: ' + str(req.status_code) + 'Unauthorized')
+				print('Response Code: ' + str(req.status_code) + ' Unauthorized')
 			elif str(req.status_code) == '403':
-				print('Response Code: ' + str(req.status_code) + 'Forbidden')
+				print('Response Code: ' + str(req.status_code) + ' Forbidden')
+			elif str(req.status_code) == '404':
+				print('Response Code: ' + str(req.status_code) + ' Not Found')
 			else:
 				print('Response Code: ' + str(req.status_code))
 			fpadr = open('host.' + address, 'w')
