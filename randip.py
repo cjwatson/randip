@@ -134,7 +134,7 @@ for address in randip():
 			print(requests.exceptions.HTTPError, address)
 			pass
 		except requests.exceptions.ConnectionError:
-			print(requests.exceptions.ConnectionError:, address)
+			print(requests.exceptions.ConnectionError, address)
 			pass
 		except TypeError:
 			print(TypeError, address)
