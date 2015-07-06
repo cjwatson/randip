@@ -133,6 +133,9 @@ for address in randip():
 		except requests.exceptions.HTTPError:
 			print(requests.exceptions.HTTPError, address)
 			pass
+		except TypeError:
+			print(TypeError, address)
+			pass
 	except KeyboardInterrupt:
 		WriteLog()
 		break
