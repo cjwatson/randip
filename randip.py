@@ -1,4 +1,4 @@
-#RandIP 0.7.3#
+#RandIP 0.7.6#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report and bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests
