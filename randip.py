@@ -132,12 +132,15 @@ for address in randip():
 			pass
 		except requests.exceptions.HTTPError:
 			print(requests.exceptions.HTTPError, address)
+			a.append(address)
 			pass
 		except requests.exceptions.ConnectionError:
 			print(requests.exceptions.ConnectionError, address)
+			a.append(address)
 			pass
 		except TypeError:
 			print(TypeError, address)
+			a.append(address)
 			pass
 	except KeyboardInterrupt:
 		WriteLog()
