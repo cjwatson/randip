@@ -67,6 +67,7 @@ for address in randip():
 			fpadr.write('Response Code: ' + str(req.status_code))
 			fpadr.write('\n')
 			fpadr.write(req.text.encode('utf-8').strip())
+			fpadr.close()
 			print('Beginning Telnet attempt on %s\n' % address)
 			#Default telnet connection using admin as user and password#
 			try:
