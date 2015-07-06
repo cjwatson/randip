@@ -1,5 +1,6 @@
 #RandIP 0.7.3#
-#Random IP Generator with Socket, SSH, and Telnet support.#
+#Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
+#Report and bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests
 from random import randint
 
@@ -131,7 +132,6 @@ for address in randip():
 		except requests.exceptions.HTTPError:
 			print(requests.exceptions.HTTPError, address)
 			pass
-		
 	except KeyboardInterrupt:
 		WriteLog()
 		break
