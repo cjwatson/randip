@@ -1,6 +1,6 @@
 #RandIP 0.5#
 #Random IP Generator with Socket, SSH, and Telnet support.#
-import socket, os, time, telnetlib, paramiko
+import socket, os, time, telnetlib, paramiko, requests
 from random import randint
 
 a = []
@@ -60,7 +60,14 @@ for address in randip():
 			hostbyadr = socket.gethostbyaddr(address)
 			print hostbyadr
 			c.append(hostbyadr)
+			req = requests.get('http://' + address)
+			print 'Response Code: ' + str(req.status_code)
+			print '\nResponse:\n' + req.text
 			print "\n"
+			fpadr = open('host.' + address, 'w')
+			fpadr.write('Response Code: ' + str(req.status_code))
+			fpadr.write('\n')
+			fpadr.write(req.text)
 			print('Beginning Telnet attempt on %s\n' % address)
 			#Default telnet connection using admin as user and password#
 			try:
@@ -123,6 +130,10 @@ for address in randip():
 			print '\n'
 			a.append(address)
 			pass
+		except requests.exceptions.HTTPError:
+			print(requests.exceptions.HTTPError, address)
+			pass
+		
 	except KeyboardInterrupt:
 		WriteLog()
 		break
