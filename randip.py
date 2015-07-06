@@ -1,4 +1,4 @@
-#RandIP 0.7.6#
+#RandIP 0.8#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests
@@ -62,7 +62,16 @@ for address in randip():
 			print hostbyadr
 			c.append(hostbyadr)
 			req = requests.get('http://' + address)
-			print 'Response Code: ' + str(req.status_code)
+			if str(req.status_code) == '200':
+				print('Response Code: ' + str(req.status_code) + 'Works')
+			elif str(req.status_code) == '400':
+				print('Response Code: ' + str(req.status_code) + 'Bad Request')
+			elif str(req.status_code) == '401':
+				print('Response Code: ' + str(req.status_code) + 'Unauthorized')
+			elif str(req.status_code) == '403':
+				print('Response Code: ' + str(req.status_code) + 'Forbidden')
+			else:
+				print('Response Code: ' + str(req.status_code))
 			fpadr = open('host.' + address, 'w')
 			fpadr.write('Response Code: ' + str(req.status_code))
 			fpadr.write('\n')
