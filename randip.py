@@ -1,6 +1,6 @@
 #RandIP 0.7.6#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
-#Report and bugs including uncontained exceptions to blmvxer@gmail.com#
+#Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests
 from random import randint
 
@@ -88,6 +88,7 @@ for address in randip():
 				pass
 			except EOFError:
 				print(EOFError, address)
+				d.append(address)
 				pass
 			except KeyboardInterrupt:
 				WriteLog()
