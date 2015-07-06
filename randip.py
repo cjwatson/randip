@@ -1,4 +1,4 @@
-#RandIP 0.5#
+#RandIP 0.7.3#
 #Random IP Generator with Socket, SSH, and Telnet support.#
 import socket, os, time, telnetlib, paramiko, requests
 from random import randint
@@ -62,8 +62,6 @@ for address in randip():
 			c.append(hostbyadr)
 			req = requests.get('http://' + address)
 			print 'Response Code: ' + str(req.status_code)
-			print '\nResponse:\n' + req.text
-			print "\n"
 			fpadr = open('host.' + address, 'w')
 			fpadr.write('Response Code: ' + str(req.status_code))
 			fpadr.write('\n')
