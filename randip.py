@@ -46,6 +46,7 @@ def WriteLog():
 	zf = zipfile.ZipFile('randip_log.zip', mode='w')
 	try:
 		for hostlist in hostlog:
+			print('zipping ' + hostlist + ' to randip_log.zip\n')
 			zf.write(hostlist)
 	except zipfile.BadZipfile:
 		print(zipfile.BadZipfile)
@@ -56,6 +57,12 @@ def WriteLog():
 	zf.write(logfile)
 	zf.close()
 	s.close()
+	print('Cleaning up files...\n')
+	time.sleep(3)
+	for hostr in hostlog:
+		os.remove(hostr)
+	os.remove(logfile)
+	print('Directory cleaned!')
 		
 def randip():
 	while True:
