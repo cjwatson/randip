@@ -1,7 +1,7 @@
-#RandIP 0.8#
+#RandIP 0.8.3#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
-import socket, os, time, telnetlib, paramiko, requests
+import socket, os, time, telnetlib, paramiko, requests, zipfile
 from random import randint
 
 a = []
@@ -11,6 +11,7 @@ d = []
 e = []
 f = []
 g = []
+hostlog = []
 timestr = time.strftime("%Y%m%d-%H%M%S")
 def WriteLog():
 	print('Keyboard Interrupt Detected.\n')
@@ -42,13 +43,26 @@ def WriteLog():
 	fp.write(str(g))
 	fp.write(')')
 	fp.close()
+	zf = zipfile.ZipFile('randip_log.zip', mode='w')
+	try:
+		for hostlist in hostlog:
+			zf.write(hostlist)
+	except zipfile.BadZipfile:
+		print(zipfile.BadZipfile)
+		zf.close()
+	except OSError:
+		print(OSError)
+		zf.close()
+	zf.write(logfile)
+	zf.close()
 	s.close()
 		
 def randip():
 	while True:
 		yield ".".join(str(randint(1, 255)) for i in range(int(4)))
 
-fp = open(str(timestr) + "_randip_log.txt", 'w')
+logfile = str(timestr) + "_randip_log.txt"
+fp = open(logfile, 'w')
 for address in randip():
 	try:
 		try:
@@ -79,6 +93,7 @@ for address in randip():
 			fpadr.write('\n')
 			fpadr.write(req.text.encode('utf-8').strip())
 			fpadr.close()
+			hostlog.append('host.' + address)
 			print('Beginning Telnet attempt on %s\n' % address)
 			#Default telnet connection using admin as user and password#
 			try:
