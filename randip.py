@@ -1,4 +1,4 @@
-#RandIP 0.8.5#
+#RandIP 0.8.3#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile
@@ -13,11 +13,6 @@ f = []
 g = []
 hostlog = []
 timestr = time.strftime("%Y%m%d-%H%M%S")
-sshuser = ['oracle', 'root', 'root', 'root', 'root', 'root']
-sshpass = ['oracle', 'root', 'abc123', 'password', '123456', 'admin']
-sshlen = len(sshuser)
-userlen = 0
-passlen = 0
 def WriteLog():
 	print('Keyboard Interrupt Detected.\n')
 	fp.write('Hosts Attempted(')
@@ -108,68 +103,52 @@ for address in randip():
 			hostlog.append('host.' + address)
 			print('Beginning Telnet attempt on %s\n' % address)
 			#Default telnet connection using admin as user and password#
-			while userlen != 6:
-				try:
-					print('Attempt ' + userlen + ' out of 6')
-					tn = telnetlib.Telnet(address, 3)
-					tn.read_until("login: ")
-					time.sleep(3)#Sometimes telnet takes a second after login#
-					tn.write(sshuser[userlen] + '\n')
-					tn.read_until('Password: ')
-					tn.write(sshpass[passlen] + '\n')
-					tn.write("ls\n")
-					tn.write("exit\n")
-					print tn.read_all()
-					d.append(tn.read_all())
-					passlen += 1
-					userlen += 1
-				except socket.error:
-					print(socket.error, 'Error Signing in or Telnet not accessible', address)
-					print '\n'
-					e.append(address)
-					passlen += 1
-					userlen += 1
-					continue
-				except EOFError:
-					print(EOFError, address)
-					d.append(address)
-					pass
-				except KeyboardInterrupt:
-					WriteLog()
-					break
-			userlen = 0
-			passlen = 0
-			print('Starting SSH Attempt on %s' % address)
-			while userlen != 6:
-				try:
-					print('Attempt ' + userlen + ' out of 6')
-					SSH = paramiko.SSHClient()
-					SSH.connect(address, username=sshuser[userlen], password=sshpass[passlen])
-					stdin, stdout, stderr = client.exec_command('ls')
-					for line in stdout:
-						print '... ' + line.strip('\n')
-					client.close()
-					f.append(address)
-					passlen +=1
-					userlen +=1
-				except socket.timeout:
-					print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
-					g.append(address)
-					passlen += 1
-					userlen += 1
-				except paramiko.ssh_exception.SSHException:
-					print(paramiko.ssh_exception.SSHException, 'SSH Could not connect or SSH not accessible', address)
-					g.append(address)
-					pass
-				except paramiko.ssh_exception.AuthenticationException:
-					print(paramiko.ssh_exception.AuthenticationException, 'Error logging into SSH' ,  address)
-					g.append(address)
-					passlen += 1
-					userlen += 1
-					continue
-				except KeyboardInterrupt:
-					WriteLog()
-					break
+			try:
+				tn = telnetlib.Telnet(address, 3)
+				tn.read_until("login: ")
+				time.sleep(3)#Sometimes telnet takes a second after login#
+				tn.write('admin' + '\n')
+				tn.read_until('Password: ')
+				tn.write('admin' + '\n')
+				tn.write("ls\n")
+				tn.write("exit\n")
+				print tn.read_all()
+				d.append(tn.read_all())
+			except socket.error:
+				print(socket.error, 'Error Signing in or Telnet not accessible', address)
+				print '\n'
+				e.append(address)
+				pass
+			except EOFError:
+				print(EOFError, address)
+				d.append(address)
+				pass
+			except KeyboardInterrupt:
+				WriteLog()
+				break
+			try:
+				print('Starting SSH Attempt on %s' % address)
+				SSH = paramiko.SSHClient()
+				SSH.connect(address, username='root', password='root')
+				stdin, stdout, stderr = client.exec_command('ls')
+				for line in stdout:
+					print '... ' + line.strip('\n')
+				client.close()
+				f.append(address)
+			except socket.timeout:
+				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
+				g.append(address)
+			except paramiko.ssh_exception.SSHException:
+				print(paramiko.ssh_exception.SSHException, 'SSH Could not connect or SSH not accessible', address)
+				g.append(address)
+				pass
+			except paramiko.ssh_exception.AuthenticationException:
+				print(paramiko.ssh_exception.AuthenticationException, 'Error logging into SSH' ,  address)
+				g.append(address)
+				pass
+			except KeyboardInterrupt:
+				WriteLog()
+				break
 		except socket.timeout:
 			print(socket.timeout, '%s timeout' % address)
 			print '\n'
