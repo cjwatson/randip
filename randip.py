@@ -69,6 +69,7 @@ def WriteLog():
 	print('Directory cleaned!, All sockets closed!, and Tor shutdown!')
 		
 def Tor_Connect():
+	global tor_process
 	tor_process = stem.process.launch_tor_with_config(
 	config = {
 	'SocksPort': str(SOCKS_PORT),
