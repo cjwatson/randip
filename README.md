@@ -23,7 +23,7 @@ Added functionality is common and the script may change from day to day dependin
 <br>
 
 <br>
-<img>http://i.imgur.com/LuPjuDf.png</img>
+![alt tag](http://i.imgur.com/LuPjuDf.png)
 
 <br>
 
