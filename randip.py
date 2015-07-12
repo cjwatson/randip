@@ -1,8 +1,11 @@
-#RandIP 0.8.3#
-#Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
+#RandIP 0.9 beta#
+#Random IP Generator with Tor, Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
-import socket, os, time, telnetlib, paramiko, requests, zipfile
+import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process
 from random import randint
+from stem.util import term
+
+SOCKS_PORT = 7000
 
 a = []
 b = []
@@ -62,8 +65,14 @@ def WriteLog():
 	for hostr in hostlog:
 		os.remove(hostr)
 	os.remove(logfile)
-	print('Directory cleaned!')
+	tor_process.kill()
+	print('Directory cleaned!, All sockets closed!, and Tor shutdown!')
 		
+
+def print_bootstrap_lines(line):
+  if "Bootstrapped " in line:
+    print(term.format(line, term.Color.BLUE))
+
 def randip():
 	while True:
 		yield ".".join(str(randint(1, 255)) for i in range(int(4)))
@@ -72,6 +81,13 @@ logfile = str(timestr) + "_randip_log.txt"
 fp = open(logfile, 'w')
 for address in randip():
 	try:
+		tor_process = stem.process.launch_tor_with_config(
+		config = {
+		'SocksPort': str(SOCKS_PORT),
+		'ExitNodes': '{ru}',
+		},
+		init_msg_handler = print_bootstrap_lines,
+		)
 		try:
 			#Socket tests with a timeout of 1.8 seconds#
 			s = socket.socket()
@@ -118,13 +134,16 @@ for address in randip():
 				print(socket.error, 'Error Signing in or Telnet not accessible', address)
 				print '\n'
 				e.append(address)
+				tor_process.kill()
 				pass
 			except EOFError:
 				print(EOFError, address)
 				d.append(address)
+				tor_process.kill()
 				pass
 			except KeyboardInterrupt:
 				WriteLog()
+				tor_process.kill()
 				break
 			try:
 				print('Starting SSH Attempt on %s' % address)
@@ -138,44 +157,61 @@ for address in randip():
 			except socket.timeout:
 				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
 				g.append(address)
+				tor_process.kill()
+				pass
+			except socket.error:
+				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
+				tor_process.kill()
+				g.append(address)
+				pass
 			except paramiko.ssh_exception.SSHException:
 				print(paramiko.ssh_exception.SSHException, 'SSH Could not connect or SSH not accessible', address)
 				g.append(address)
+				tor_process.kill()
 				pass
 			except paramiko.ssh_exception.AuthenticationException:
 				print(paramiko.ssh_exception.AuthenticationException, 'Error logging into SSH' ,  address)
 				g.append(address)
+				tor_process.kill()
 				pass
 			except KeyboardInterrupt:
 				WriteLog()
+				tor_process.kill()
 				break
 		except socket.timeout:
 			print(socket.timeout, '%s timeout' % address)
 			print '\n'
 			a.append(address)
+			tor_process.kill()
 			pass
 		except socket.herror:
 			print(socket.herror, 'Error getting host by address on %s' % address)
 			print '\n'
 			a.append(address)
+			tor_process.kill()
 			pass
 		except socket.error:
 			print(socket.error, 'Failed to connect to %s' % address)
 			print '\n'
 			a.append(address)
+			tor_process.kill()
 			pass
 		except requests.exceptions.HTTPError:
 			print(requests.exceptions.HTTPError, address)
 			a.append(address)
+			tor_process.kill()
 			pass
 		except requests.exceptions.ConnectionError:
 			print(requests.exceptions.ConnectionError, address)
 			a.append(address)
+			tor_process.kill()
 			pass
 		except TypeError:
 			print(TypeError, address)
 			a.append(address)
+			tor_process.kill()
 			pass
 	except KeyboardInterrupt:
 		WriteLog()
+		tor_process.kill()
 		break
