@@ -217,6 +217,12 @@ for address in randip():
 			tor_process.kill()
 			Tor_Connect()
 			pass
+		except requests.packages.urllib3.exceptions.LocationValueError:
+			print(requests.packages.urllib3.exceptions.LocationValueError, address)
+			a.append(address)
+			tor_process.kill()
+			Tor_Connect()
+			pass
 		except TypeError:
 			print(TypeError, address)
 			a.append(address)
