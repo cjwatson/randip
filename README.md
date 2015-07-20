@@ -22,6 +22,14 @@ $Tor socket connection
 Added functionality is common and the script may change from day to day depending on development.
 <br>
 
+#Changelog
+Empty
+<br>
+#Planned Features
+Features for 1.0
+<br>
+Adding GUI.
+
 <br>
 ![alt tag](http://i.imgur.com/LuPjuDf.png)
 
