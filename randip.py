@@ -1,11 +1,44 @@
 #RandIP 0.9 beta#
 #Random IP Generator with Tor, Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
-import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process
+import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess
 from random import randint
 from stem.util import term
+from PyQt4.QtGui import *
+from PyQt4.QtWebKit import *
 
-SOCKS_PORT = 7000
+def UnknownError():#Catch all unknown errors and do an Emergency exit#
+	e = sys.exc_info()[0]
+	exc_type, exc_obj, exc_tb = sys.exc_info()
+	fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+	print(exc_type, fname, exc_tb.tb_lineno)
+	print("Uncaught error %s" % e)
+	fp = open("error.log", 'a')
+	fp.write("Script:")
+	fp.write(str(fname))
+	fp.write('\n')
+	fp.write("Error: ")
+	fp.write(str(e))
+	fp.write('\n')
+	fp.write(str(exc_type))
+	fp.write('\n')
+	fp.write(str(exc_tb.tb_lineno))
+	fp.write('\n')
+	fp.write(str(exc_obj))
+	fp.write('\n')
+	fp.write(str(exc_tb))
+	fp.write('\n')
+	fp.write('\n')
+	fp.write('\n')
+	fp.close()
+	print('\n')*5
+	print("Error.log wrote to current directory...Check and report any unhandled exceptions or bugs to blmvxer@gmail.com\n")
+	print('\n')*5
+	print("sleeping for 5 seconds and then finishing exit")
+	time.sleep(5)
+	WriteLog()
+
+SOCKS_PORT = 9050
 
 a = []
 b = []
@@ -65,18 +98,22 @@ def WriteLog():
 	for hostr in hostlog:
 		os.remove(hostr)
 	os.remove(logfile)
-	tor_process.kill()
+#	tor_process.kill()
 	print('Directory cleaned!, All sockets closed!, and Tor shutdown!')
-		
-def Tor_Connect():
-	global tor_process
-	tor_process = stem.process.launch_tor_with_config(
-	config = {
-	'SocksPort': str(SOCKS_PORT),
-	'ExitNodes': '{ru}',
-	},
-	init_msg_handler = print_bootstrap_lines,
-	)
+
+#def Tor_Connect():
+#	try:
+#		print(term.format('Connecting to Tor...', term.Color.BLUE))
+#		global tor_process
+#		tor_process = stem.process.launch_tor_with_config(
+#		config = {
+#		'SocksPort': str(SOCKS_PORT),
+#		'ExitNodes': '{ru}',
+#		},
+#		init_msg_handler = print_bootstrap_lines,
+#		)
+#	except OSError:
+#		subprocess.call("killall tor")
 
 def print_bootstrap_lines(line):
   if "Bootstrapped " in line:
@@ -86,10 +123,19 @@ def randip():
 	while True:
 		yield ".".join(str(randint(1, 255)) for i in range(int(4)))
 
+def webGui():
+	import httplib2, sys
+	http = httplib2.Http()
+	headers, content = http.request("http://python.org", "GET")
+	app = QApplication(sys.argv)
+	web = QWebView()
+	web.setHtml(content)
+	web.show()
+	sys.exit(app.exec_())
+
 logfile = str(timestr) + "_randip_log.txt"
 fp = open(logfile, 'w')
-print("Connecting Tor...\n")
-Tor_Connect()
+#Tor_Connect()
 for address in randip():
 	try:
 		try:
@@ -104,15 +150,16 @@ for address in randip():
 			c.append(hostbyadr)
 			req = requests.get('http://' + address)
 			if str(req.status_code) == '200':
-				print('Response Code: ' + str(req.status_code) + ' Works')
+				print(term.format('Response Code: ' + str(req.status_code) + ' Works', term.Color.GREEN))
+				webGui()
 			elif str(req.status_code) == '400':
-				print('Response Code: ' + str(req.status_code) + ' Bad Request')
+				print(term.format('Response Code: ' + str(req.status_code) + ' Bad Request', term.Color.RED))
 			elif str(req.status_code) == '401':
-				print('Response Code: ' + str(req.status_code) + ' Unauthorized')
+				print(term.format('Response Code: ' + str(req.status_code) + ' Unauthorized', term.Color.YELLOW))
 			elif str(req.status_code) == '403':
-				print('Response Code: ' + str(req.status_code) + ' Forbidden')
+				print(term.format('Response Code: ' + str(req.status_code) + ' Forbidden', term.Color.YELLOW))
 			elif str(req.status_code) == '404':
-				print('Response Code: ' + str(req.status_code) + ' Not Found')
+				print(term.format('Response Code: ' + str(req.status_code) + ' Not Found', term.Color.RED))
 			else:
 				print('Response Code: ' + str(req.status_code))
 			fpadr = open('host.' + address, 'w')
@@ -134,25 +181,25 @@ for address in randip():
 				tn.write("exit\n")
 				print tn.read_all()
 				d.append(tn.read_all())
-				tor_process.kill()
-				Tor_Connect()
+#				tor_process.kill()
+#				Tor_Connect()
 			except socket.error:
 				print(socket.error, 'Error Signing in or Telnet not accessible', address)
 				print '\n'
 				e.append(address)
-				tor_process.kill()
-				Tor_Connect()
+#				tor_process.kill()
+#				Tor_Connect()
 				pass
 			except EOFError:
 				print(EOFError, address)
 				d.append(address)
-				tor_process.kill()
-				Tor_Connect()
+#				tor_process.kill()
+#				Tor_Connect()
 				pass
 			except KeyboardInterrupt:
 				WriteLog()
 				tor_process.kill()
-				break
+#				break
 			try:
 				print('Starting SSH Attempt on %s' % address)
 				SSH = paramiko.SSHClient()
@@ -165,30 +212,30 @@ for address in randip():
 			except socket.timeout:
 				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
 				g.append(address)
-				tor_process.kill()
-				Tor_Connect()
+#				tor_process.kill()
+#				Tor_Connect()
 				pass
 			except socket.error:
 				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
-				tor_process.kill()
+#				tor_process.kill()
 				g.append(address)
-				Tor_Connect()
+#				Tor_Connect()
 				pass
 			except paramiko.ssh_exception.SSHException:
 				print(paramiko.ssh_exception.SSHException, 'SSH Could not connect or SSH not accessible', address)
 				g.append(address)
-				tor_process.kill()
-				Tor_Connect()
+#				tor_process.kill()
+#				Tor_Connect()
 				pass
 			except paramiko.ssh_exception.AuthenticationException:
 				print(paramiko.ssh_exception.AuthenticationException, 'Error logging into SSH' ,  address)
 				g.append(address)
-				tor_process.kill()
-				Tor_Connect()
+#				tor_process.kill()
+#				Tor_Connect()
 				pass
 			except KeyboardInterrupt:
 				WriteLog()
-				tor_process.kill()
+#				tor_process.kill()
 				break
 		except socket.timeout:
 			print(socket.timeout, '%s timeout' % address)
@@ -208,28 +255,37 @@ for address in randip():
 		except requests.exceptions.HTTPError:
 			print(requests.exceptions.HTTPError, address)
 			a.append(address)
-			tor_process.kill()
-			Tor_Connect()
+#			tor_process.kill()
+#			Tor_Connect()
 			pass
 		except requests.exceptions.ConnectionError:
 			print(requests.exceptions.ConnectionError, address)
 			a.append(address)
-			tor_process.kill()
-			Tor_Connect()
+#			tor_process.kill()
+#			Tor_Connect()
 			pass
 		except requests.packages.urllib3.exceptions.LocationValueError:
 			print(requests.packages.urllib3.exceptions.LocationValueError, address)
 			a.append(address)
-			tor_process.kill()
-			Tor_Connect()
+#			tor_process.kill()
+#			Tor_Connect()
 			pass
+		except requests.exceptions.ReadTimeout:
+			print(requests.exceptions.ReadTimeout, address)
+			a.append(address)
+#			tor_process.kill()
+#			Tor_Connect()
 		except TypeError:
 			print(TypeError, address)
 			a.append(address)
-			tor_process.kill()
-			Tor_Connect()
+#			tor_process.kill()
+#			Tor_Connect()
 			pass
+		except Exception as e:
+			UnknownError()
+	except Exception as e:
+		UnknownError()
 	except KeyboardInterrupt:
 		WriteLog()
-		tor_process.kill()
+#		tor_process.kill()
 		break
