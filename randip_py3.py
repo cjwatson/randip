@@ -124,18 +124,21 @@ def randip():
 		yield ".".join(str(randint(1, 255)) for i in range(int(4)))
 
 def webGui():
-	import httplib2
-	import signal
-	def sig_sighandler():
-		pass
-	signal.signal(signal.SIGINT, sig_sighandler)
-	http = httplib2.Http()
-	headers, content = http.request(myhost, "GET")
-	app = QApplication(sys.argv)
-	web = QWebView()
-	web.setHtml(content)
-	web.show()
-	app.exec_()
+	try:
+		import httplib2
+		import signal
+		def sig_sighandler():
+			pass
+			signal.signal(signal.SIGINT, sig_sighandler)
+			http = httplib2.Http()
+			headers, content = http.request(myhost, "GET")
+			app = QApplication(sys.argv)
+			web = QWebView()
+			web.setHtml(content)
+			web.show()
+			app.exec_()
+	except Exception as e:
+		UnknownError()
 
 logfile = str(timestr) + "_randip_log.txt"
 fp = open(logfile, 'w')
