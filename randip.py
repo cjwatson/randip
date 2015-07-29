@@ -126,12 +126,16 @@ def randip():
 def webGui():
 	import httplib2, sys
 	http = httplib2.Http()
-	headers, content = http.request("http://python.org", "GET")
+	headers, content = http.request(myhost, "GET")
 	app = QApplication(sys.argv)
 	web = QWebView()
 	web.setHtml(content)
 	web.show()
-	sys.exit(app.exec_())
+	while True:
+		try:
+			app.exec_()
+		except KeyboardInterrupt:
+			pass
 
 logfile = str(timestr) + "_randip_log.txt"
 fp = open(logfile, 'w')
@@ -148,6 +152,8 @@ for address in randip():
 			hostbyadr = socket.gethostbyaddr(address)
 			print hostbyadr
 			c.append(hostbyadr)
+			global myhost
+			myhost = 'http://' + address
 			req = requests.get('http://' + address)
 			if str(req.status_code) == '200':
 				print(term.format('Response Code: ' + str(req.status_code) + ' Works', term.Color.GREEN))
