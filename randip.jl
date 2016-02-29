@@ -4,19 +4,28 @@ function gen_ip()
                 push!(ip, i)
         end
         global ipaddr = join(ip, ".")
-
 end
 
 function test_ip()
         gen_ip()
         println("Testing IP: ", ipaddr)
-        socket = connect(ipaddr, 80)
-        println(socket)
+        global socket = connect(ipaddr, 80)
 end
+
+function timer()
+        sleep(5)
+        close(socket)
+end
+
 try
         while true
-                test_ip()
+                @async test_ip()
+                @async timer()
+                timer()
         end
 catch err
-        println(err)
+        println("Simple Error:\n", err, "\n")
+        println("Detailed Error: ", error(), "\n")
+        println("Bactrace: ", backtrace())
+        exit()
 end
