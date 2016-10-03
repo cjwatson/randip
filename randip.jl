@@ -16,6 +16,11 @@ function genIP()
   global ranaddr = join(ip, ".")
 end
 
+function tasks()
+  print("Host: ", ranaddr, " down on ", mytask, "\n")
+  print(err)
+  print("\n")
+end
 ##Argument Functions
 function NetMask()
   inputIP = input("Enter IP starting range: ")
@@ -24,9 +29,10 @@ function NetMask()
   i = 1
   while i < length(ipAddr)
     try
-      connect(ipAddr[i], 80)
+      socket = connect(ipAddr[i], 80)
       print("Host: ", ipAddr[i], " up!..\n")
       i = i + 1
+      close(socket)
     catch LoadError
       print("Host: ", ipAddr[i], " down..\n")
       i = i + 1
@@ -39,10 +45,48 @@ function randIP()
   k = 0
   while k != 1
     try
-      connect(ranaddr, 80)
+      #socket0
+      print("Connecting to ", ranaddr, " on socket0\n")
+      socket0 = @async connect(ranaddr, 80)
+      task0 = current_task()
+      #socket1
+      genIP()
+      print("Connecting to ", ranaddr, " on socket1\n")
+      socket1 = @async connect(ranaddr, 80)
+      task1 = current_task()
+      #socket2
+      genIP()
+      print("Connecting to ", ranaddr, " on socket2\n")
+      socket2 = @async connect(ranaddr, 80)
+      task2 = current_task()
+      #socket3
+      genIP()
+      print("Connecting to ", ranaddr, " on socket3\n")
+      socket3 = @async connect(ranaddr, 80)
+      task3 = current_task()
+      sleep(10)
       print("Host: ", ranaddr, " up!..\n")
-    catch LoadError
-      print("Host: ", ranaddr, " down..\n")
+      genIP()
+    catch
+      if istaskdone(task0) == true
+        global mytask = "task0"
+        tasks()
+        genIP()
+      elseif istaskdone(task1) == true
+        global mytask = "task1"
+        tasks()
+        genIP()
+      elseif istaskdone(task2) == true
+        global mytask = "task2"
+        tasks()
+        genIP()
+      elseif istaskdone(task3) == true
+        global mytask = "task3"
+        tasks()
+        genIP()
+      else
+        continue
+      end
     end
   end
 end
