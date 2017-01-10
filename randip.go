@@ -39,12 +39,14 @@ func main() {
                 if err != nil {
                         fmt.Println(err)
                         fmt.Println("")
+                        x += 1
+                        continue
+                } else {
+                        defer conn.Close()
+                        fmt.Println(IP + ": Connected")
+                        fmt.Println("")
+                        x += 1
                         continue
                 }
-        defer conn.Close()
-        buffer := make([]byte, 1024)
-        conn.Read(buffer)
-        fmt.Println(IP + ": Connected")
-        x += 1
         }
 }
