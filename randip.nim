@@ -18,6 +18,11 @@ proc connect(url: string, timeout: int): tuple[msg: string, ok: bool] =
       let cstr: string = fixIp
       send_new_notification(me, "RandIP", cstr, "", timeout=0, urgency=NotificationUrgency.Normal)
       echo res.status
+    elif "500 Internal Server Error" == res.status:
+      let fixIp = url & " 500 Internal Server Error"
+      let cstr: string = fixIp
+      send_new_notification(me, "RandIP", cstr, "", timeout=0, urgency=NotificationUrgency.Normal)
+      echo res.status
     else:
       echo res.status
       return (res.status, false)
