@@ -4,28 +4,32 @@ import random, strutils, httpclient, libnotify
 proc connect(url: string, timeout: int): tuple[msg: string, ok: bool] =
   try:
     let me  = newNotifyClient("RandIP")
-    let res = httpclient.request(url,
-                                 httpMethod = httpclient.HttpHEAD,
-                                 timeout = timeout * 1000)
-    if "200 OK" == res.status:
+    var client = newHttpClient(timeout = timeout * 1000)
+    var resp = client.request(url)
+    if "200 OK" == resp.status:
       let fixIp = url & " 200 OK"
       let cstr: string = fixIp
-      send_new_notification(me, "RandIP", cstr, "", timeout=0, urgency=NotificationUrgency.Normal)
-      echo res.status
-      return (res.status, true)
-    elif "401 Unauthorized" == res.status:
+      send_new_notification(me, "RandIP", cstr, "", timeout=3, urgency=NotificationUrgency.Normal)
+      echo resp.status
+      return (resp.status, true)
+    elif "401 Unauthorized" == resp.status:
       let fixIp = url & " 401 Unauthorized"
       let cstr: string = fixIp
-      send_new_notification(me, "RandIP", cstr, "", timeout=0, urgency=NotificationUrgency.Normal)
-      echo res.status
-    elif "500 Internal Server Error" == res.status:
+      send_new_notification(me, "RandIP", cstr, "", timeout=3, urgency=NotificationUrgency.Normal)
+      echo resp.status
+      return (resp.status, false)
+    elif "500 Internal Server Error" == resp.status:
       let fixIp = url & " 500 Internal Server Error"
       let cstr: string = fixIp
-      send_new_notification(me, "RandIP", cstr, "", timeout=0, urgency=NotificationUrgency.Normal)
-      echo res.status
+      send_new_notification(me, "RandIP", cstr, "", timeout=3, urgency=NotificationUrgency.Normal)
+      echo resp.status
+      return (resp.status, false)
     else:
-      echo res.status
-      return (res.status, false)
+      let cstr: string = resp.status
+      echo resp.status
+      send_new_notification(me, "RandIP", cstr, "", timeout=3, urgency=NotificationUrgency.Normal)
+      client.close()
+      return (resp.status, false)
   except:
     echo getCurrentExceptionMsg()
     return ("Unknown error", false)
@@ -41,4 +45,5 @@ while true:
       url = "http://" & ipAddr
       timeout = 3
    echo "Connecting to " & ipAddr
-   let res = connect(url, timeout)
+   discard connect(url, timeout)
+   
