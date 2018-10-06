@@ -220,7 +220,7 @@ def TelnetConnect():
 	#Default telnet connection using admin as user and password#
 	try:
 		telnettime=time.clock()
-		tn = telnetlib.Telnet(address, 3)
+		tn = telnetlib.Telnet(address, 23)
 		tn.read_until("login: ")
 		time.sleep(3)#Sometimes telnet takes a second after login#
 		tn.write('admin' + '\n')
