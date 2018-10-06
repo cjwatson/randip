@@ -1,4 +1,4 @@
-#RandIP 1.2 Stable#
+#RandIP 1.2.1 Stable#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys, logging
@@ -156,6 +156,7 @@ def ShellShock():
 		print('Exploit failed...\n')
 		pass
 def SSHenum():
+	global SSHsock
 	class InvalidUsername(Exception):
 		pass
 	def add_boolean(*args, **kwargs):
@@ -242,6 +243,10 @@ def TelnetConnect():
 		telend=time.clock()
 		totaltime = telend - telnettime
 		print(exceptions.AttributeError)
+		d.append(address)
+		pass
+	except exceptions.TypeError:
+		print(exceptions.TypeError)
 		pass
 	except KeyboardInterrupt:
 		WriteLog()
@@ -349,6 +354,7 @@ for address in randip():
 		except socket.herror:
 			print((socket.herror, 'Error getting host by address on %s' % address))
 			print('\n')
+			print('Beginning Service Discovery\n')
 			find_service_name()
 			print(('Beginning Telnet attempt on %s\n' % address))
 			if Telio == 1:
