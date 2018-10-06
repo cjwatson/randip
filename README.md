@@ -11,7 +11,6 @@ $ssh login attempt
 <br>
   CVE: 2016-6210
 <br>
-<br>
   CVE: 2018-15473
 <br>
 $HTML Screenshot of active hosts
@@ -33,6 +32,8 @@ Added functionality is common and the script may change from day to day dependin
 10/6/18
 <br>
 added CVE: 2018-15473
+<br>
+added testing telnet and ssh on socket.herror
 <br>
 
 <br>
