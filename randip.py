@@ -231,14 +231,14 @@ def TelnetConnect():
 		tn.write("ls\n")
 		tn.write("exit\n")
 		print(tn.read_all())
-		e.append(tn.read_all())
+		#e.append(tn.read_all())
 	except socket.error:
 		telend=time.clock()
 		totaltime = telend - telnettime
 		print((socket.error, 'Error Signing in or Telnet not accessible', address))
 		print('\n')
 		print(totaltime)
-		e.append(address)
+		#e.append(address)
 		pass
 	except EOFError:
 		print((EOFError, address))
