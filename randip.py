@@ -171,7 +171,7 @@ def SSHenum():
 	def userauth_failure(*args, **kwargs):
 		raise InvalidUsername()
 	print('Using CVE:2018-15473')
-	SSHsocket = socket.socket()
+	SSHsock = socket.socket()
 	try:
 		SSHsock.connect((address, 22))
 	except socket.error:
