@@ -231,7 +231,7 @@ def TelnetConnect():
 		tn.write("ls\n")
 		tn.write("exit\n")
 		print(tn.read_all())
-		d.append(tn.read_all())
+		e.append(tn.read_all())
 	except socket.error:
 		telend=time.clock()
 		totaltime = telend - telnettime
