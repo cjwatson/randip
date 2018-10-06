@@ -1,4 +1,4 @@
-# RandIP 1.0 Stable (Python)
+# RandIP 1.2 Stable (Python)
 RandIP is a python scripts that generates random IP address's and uses sockets to test whether the connection is valid or not with the additional test of logging in to Telnet and SSH with the default logins.
 
 <b>:Features:</b>
@@ -10,6 +10,9 @@ $telnet login attempt
 $ssh login attempt
 <br>
   CVE: 2016-6210
+<br>
+<br>
+  CVE: 2018-15473
 <br>
 $HTML Screenshot of active hosts
 <br>
@@ -27,7 +30,9 @@ Added functionality is common and the script may change from day to day dependin
 <br>
 
 #Changelog
-Empty
+10/6/18
+<br>
+added CVE: 2018-15473
 <br>
 
 <br>
