@@ -176,6 +176,7 @@ def SSHenum():
 		SSHsock.connect((address, 22))
 	except socket.error:
 		print '[-] Failed to connect'
+		pass
 	transport = paramiko.transport.Transport(SSHsock)
 	try:
 		transport.start_client()
