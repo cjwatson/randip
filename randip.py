@@ -152,6 +152,9 @@ def ShellShock():
 			data = serversocket.recv(buff)
 			print(data)
 			print('Done.\n')
+	except exception.TypeError:
+		print('Exploit failed...\n')
+		pass
 	except:
 		print('Exploit failed...\n')
 		pass
@@ -321,6 +324,8 @@ for address in randip():
 				print((term.format('Response Code: ' + str(req.status_code) + ' Forbidden', term.Color.YELLOW)))
 			elif str(req.status_code) == '404':
 				print((term.format('Response Code: ' + str(req.status_code) + ' Not Found', term.Color.RED)))
+			elif str(req.status_code) == '500':
+				print((term.format('Response Code: ' + str(req.status_code) + ' Internal Server Error', term.Color.YELLOW)))
 			else:
 				print(('Response Code: ' + str(req.status_code)))
 			fpadr = open('host.' + address, 'w')
