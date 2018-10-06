@@ -189,6 +189,7 @@ def SSHenum():
 		pass
 	except paramiko.ssh_exception.AuthenticationException:
 		print '[+] Valid username'
+		f.append(address)
 		pass
 #End Of Exploit Container
 #########################################################################
