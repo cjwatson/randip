@@ -360,9 +360,9 @@ for address in randip():
 				SSHConnect()
 				SSHenum()
 			elif SSHio == 0:
-			print('SSH port not open...skipping\n')
-			a.append(address)
-			pass
+				print('SSH port not open...skipping\n')
+				a.append(address)
+				pass
 		except socket.error:
 			print((socket.error, 'Failed to connect to %s' % address))
 			print('\n')
