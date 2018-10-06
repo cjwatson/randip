@@ -159,6 +159,7 @@ def ShellShock():
 		print('Exploit failed...\n')
 		pass
 def SSHenum():
+	time.sleep(4)
 	global SSHsock
 	class InvalidUsername(Exception):
 		pass
