@@ -228,7 +228,7 @@ def TelnetConnect():
 		time.sleep(3)#Sometimes telnet takes a second after login#
 		tn.write('admin' + '\n')
 		tn.read_until('Password: ')
-		tn.write('admin' + '\n')
+		tn.write('password' + '\n')
 		tn.write("ls\n")
 		tn.write("exit\n")
 		print(tn.read_all())
