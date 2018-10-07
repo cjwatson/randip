@@ -372,6 +372,7 @@ for address in randip():
 			pass
 		except requests.exceptions.ConnectionError:
 			print((requests.exceptions.ConnectionError, address))
+			find_service_name()
 			a.append(address)
 			pass
 		except requests.packages.urllib3.exceptions.LocationValueError:
