@@ -163,6 +163,9 @@ def SSHenum():
 		print '[-] Failed to negotiate SSH transport'
 		if e.message == 'Error reading SSH protocol banner':
 			pass
+		elif e.message == 'No existing session':
+			print(e)
+			pass
 		else:
 			print(e)
 			pass
