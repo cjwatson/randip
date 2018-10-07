@@ -159,9 +159,13 @@ def SSHenum():
 	transport = paramiko.transport.Transport(SSHsock)
 	try:
 		transport.start_client()
-	except paramiko.ssh_exception.SSHException:
+	except paramiko.ssh_exception.SSHException as e:
 		print '[-] Failed to negotiate SSH transport'
-		pass
+		if e.message == 'Error reading SSH protocol banner':
+			pass
+		else:
+			print(e)
+			pass
 	try:
 		transport.auth_publickey('root', paramiko.RSAKey.generate(2048))
 	except InvalidUsername:
