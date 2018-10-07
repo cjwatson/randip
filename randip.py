@@ -156,7 +156,11 @@ def SSHenum():
 	except socket.error:
 		print '[-] Failed to connect'
 		pass
-	transport = paramiko.transport.Transport(SSHsock)
+	try:
+		transport = paramiko.transport.Transport(SSHsock)
+	except paramiko.ssh_exception.SSHException as e:
+		print(e)
+		pass
 	try:
 		transport.start_client()
 	except paramiko.ssh_exception.SSHException as e:
