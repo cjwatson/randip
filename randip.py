@@ -160,13 +160,15 @@ def SSHenum():
 		transport = paramiko.transport.Transport(SSHsock)
 	except paramiko.ssh_exception.SSHException as e:
 		print(e)
+		SSHsock.close()
 		pass
 	try:
 		transport.start_client()
 	except paramiko.ssh_exception.SSHException as e:
 		print '[-] Failed to negotiate SSH transport'
 		print(e)
-		break
+		SSHsock.close()
+		pass
 	try:
 		transport.auth_publickey('root', paramiko.RSAKey.generate(2048))
 	except InvalidUsername:
