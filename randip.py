@@ -259,6 +259,7 @@ def SSHConnect():
 			total=endtime-starttime
 			print('Possible username root based on enumeration exploit...or timeout...Check Manually!...')
 			print(total)
+			SSH.close()
 	except socket.timeout:
 		print((socket.timeout, '%s timeout SSH or SSH not accessible' % address))
 		g.append(address)
