@@ -1,4 +1,4 @@
-#RandIP 1.2.2 Stable#
+#RandIP 1.2.1 Stable#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys, logging
@@ -173,6 +173,7 @@ def SSHenum():
 		raise InvalidUsername()
 	print('Using CVE:2018-15473')
 	SSHsock = socket.socket()
+	SSHsock.settimeout(10)
 	try:
 		SSHsock.connect((address, 22))
 	except socket.error:
