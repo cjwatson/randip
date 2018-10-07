@@ -28,7 +28,8 @@ $Tor socket connection
 Added functionality is common and the script may change from day to day depending on development.
 <br>
 
-#Changelog
+<b>#Changelog</b>
+<br>
 10/7/18:RandIP 1.2.3
 <br>
 Added SSH and Telnet Timeouts to prevent blocking
