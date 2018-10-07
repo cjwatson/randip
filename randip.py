@@ -1,4 +1,4 @@
-#RandIP 1.2.1 Stable#
+#RandIP 1.2.2 Stable#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys, logging
@@ -225,7 +225,7 @@ def TelnetConnect():
 	try:
 		telnettime=time.clock()
 		tn = telnetlib.Telnet(address, 23)
-		tn.read_until("login: ")
+		tn.read_until("login: ", 60)
 		time.sleep(3)#Sometimes telnet takes a second after login#
 		tn.write('admin' + '\n')
 		tn.read_until('Password: ')
@@ -268,7 +268,7 @@ def SSHConnect():
 		starttime=time.clock()
 		SSH.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 		try:
-			SSH.connect(address, username='root', password='root')
+			SSH.connect(address, username='root', password='root', timeout = 60)
 			stdin, stdout, stderr = client.exec_command('ls')
 			for line in stdout:
 				print('... ' + line.strip('\n'))
