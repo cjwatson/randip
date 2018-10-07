@@ -148,6 +148,7 @@ def SSHenum():
 	def userauth_failure(*args, **kwargs):
 		raise InvalidUsername()
 	print('Using CVE:2018-15473')
+	paramiko.util.log_to_file("error.log")
 	SSHsock = socket.socket()
 	SSHsock.settimeout(10)
 	try:
