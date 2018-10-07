@@ -161,14 +161,8 @@ def SSHenum():
 		transport.start_client()
 	except paramiko.ssh_exception.SSHException as e:
 		print '[-] Failed to negotiate SSH transport'
-		if e.message == 'Error reading SSH protocol banner':
-			pass
-		elif e.message == 'No existing session':
-			print(e)
-			pass
-		else:
-			print(e)
-			pass
+		print(e)
+		pass
 	try:
 		transport.auth_publickey('root', paramiko.RSAKey.generate(2048))
 	except InvalidUsername:
