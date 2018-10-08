@@ -78,4 +78,4 @@ This script runs universally on all platforms that support Python 2.7 and Parami
 <br>
 <br>
 <br>
-The Nim, Julia, and Go versions do not contain all the features as the Python version does. They are merely basic ports.
+The Nim port is a basic port which may be implemented for standard binary releases...This is not part of the major roadmap
