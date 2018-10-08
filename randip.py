@@ -274,6 +274,7 @@ def SSHConnect():
 				SSHenum()
 			elif total == '0.015625':#except this one fubars too
 				pass
+			elif total == '0.0'#In case SSH hangs
 			else:
 				pass
 	except socket.timeout:
