@@ -174,6 +174,9 @@ def SSHenum():
 	except InvalidUsername:
 		print '[*] Invalid username'
 		pass
+	except EOFError:
+		print EOFError
+		pass
 	except paramiko.ssh_exception.AuthenticationException:
 		print '[+] Valid username'
 		f.append(address)
