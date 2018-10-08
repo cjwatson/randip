@@ -195,7 +195,6 @@ def find_service_name():
 		print('SSH Closed\n')
 		SSHio=0
 		time.sleep(2)
-		sock.close()
 	result1 = sock.connect_ex((address,23))
 	if result1 == 0:
 		print('Telnet Possibly Open\n')
@@ -206,7 +205,6 @@ def find_service_name():
 		print('Telnet Closed\n')
 		Telio=0
 		time.sleep(2)
-		sock.close()
 
 
 def TelnetConnect():
