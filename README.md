@@ -36,11 +36,13 @@ Bug fixes within SSH enumeration exploits
 <br>
 added false-positive tests on requests.ConnectionError
 <br>
+<br>
 10/7/18:RandIP 1.2.3
 <br>
 Added SSH and Telnet Timeouts to prevent blocking
 <br>
 removed ShellShock exploit(no longer valid)
+<br>
 <br>
 10/6/18:RandIP 1.2.1
 <br>
@@ -61,7 +63,6 @@ added testing telnet and ssh on socket.herror
 <br>
 
 <br>
-![alt tag](http://i.imgur.com/LuPjuDf.png)
 
 <br>
 
