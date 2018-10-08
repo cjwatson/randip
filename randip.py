@@ -270,8 +270,10 @@ def SSHConnect():
 			print('Possible username root based on enumeration exploit...or timeout...Check Manually!...')
 			print(total)
 			SSH.close()
-			if total >= '0.046875':
+			if total >= '0.046875':#This seems to be the magic number not to go below
 				SSHenum()
+			elif total == '0.015625':#except this one fubars too
+				pass
 			else:
 				pass
 	except socket.timeout:
