@@ -190,19 +190,23 @@ def find_service_name():
 		print('SSH Possibly Open\n')
 		SSHio=1
 		time.sleep(2)
+		result.close()
 	else:
 		print('SSH Closed\n')
 		SSHio=0
 		time.sleep(2)
+		result.close()
 	result1 = sock.connect_ex((address,23))
 	if result1 == 0:
 		print('Telnet Possibly Open\n')
 		Telio=1
 		time.sleep(2)
+		result1.close()
 	else:
 		print('Telnet Closed\n')
 		Telio=0
 		time.sleep(2)
+		result1.close()
 
 
 def TelnetConnect():
@@ -383,9 +387,18 @@ for address in randip():
 			pass
 		except requests.exceptions.ConnectionError:
 			print((requests.exceptions.ConnectionError, address))
+			print('Beginning Service Discovery\n')
 			find_service_name()
-			a.append(address)
-			pass
+			if Telio == 1:
+				TelnetConnect()
+			elif Telio == 0:
+				print('Telnet port not open...skipping\n')
+			print(('Starting SSH Attempt on %s' % address))
+			if SSHio == 1:
+				SSHConnect()
+			elif SSHio == 0:
+				print('SSH port not open...skipping\n')
+				pass
 		except requests.packages.urllib3.exceptions.LocationValueError:
 			print((requests.packages.urllib3.exceptions.LocationValueError, address))
 			a.append(address)
