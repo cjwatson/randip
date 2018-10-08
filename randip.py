@@ -267,7 +267,7 @@ def SSHConnect():
 			print('Possible username root based on enumeration exploit...or timeout...Check Manually!...')
 			print(total)
 			SSH.close()
-			if totaltime >= '0.046875':
+			if total >= '0.046875':
 				SSHenum()
 			else:
 				pass
