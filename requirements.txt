@@ -1,0 +1,4 @@
+##Python requirements for RandIP##
+paramiko
+stem
+requests
