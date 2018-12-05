@@ -24,4 +24,4 @@ parts:
 
 apps:
   randip:
-    command: bin/randip
+    command: /usr/bin/randip
