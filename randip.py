@@ -1,4 +1,4 @@
-#RandIP 1.2.4 Stable#
+#RandIP 1.2.7-snap Stable#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys, logging
@@ -6,6 +6,16 @@ from random import randint
 from stem.util import term
 #from PyQt4.QtGui import *
 #from PyQt4.QtWebKit import *
+
+args = sys.argv[1:]
+for arg in args:
+	if arg == '-nim':
+		print("Using nim version")
+		subprocess.call("/snap/randip/snap/randip_nim")
+		exit()
+	else:
+		print("Using python version")
+		pass
 
 def UnknownError():#Catch all unknown errors and do an Emergency exit#
 	e = sys.exc_info()[0]
