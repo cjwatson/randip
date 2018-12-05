@@ -1,5 +1,5 @@
 name: randip
-version: 1.2.5
+version: 1.2.6-snap
 summary: RandIP
 description: |
   RandIP is a python script that generates random IP's |
@@ -22,6 +22,7 @@ parts:
       - python-paramiko
       - python-stem
       - python-requests
+      - python-telnetlib
 
 apps:
   randip:
