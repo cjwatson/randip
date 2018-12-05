@@ -1,5 +1,5 @@
 name: randip
-version: 1.2.4
+version: 1.2.5
 summary: RandIP
 description: |
   RandIP is a python script that generates random IP's |
@@ -7,7 +7,7 @@ description: |
   vast IoT.
 
 grade: stable
-confinement: devmode
+confinement: strict
 
 architectures:
   - build-on: amd64
