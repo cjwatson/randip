@@ -26,3 +26,5 @@ parts:
 apps:
   randip:
     command: python /snap/randip/current/snap/randip.py
+    plugs:
+      - network
