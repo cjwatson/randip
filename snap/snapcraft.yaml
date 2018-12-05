@@ -25,4 +25,4 @@ parts:
 
 apps:
   randip:
-    command: python $SNAP/bin/randip
+    command: python randip.py
