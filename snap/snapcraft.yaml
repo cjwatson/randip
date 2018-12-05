@@ -28,3 +28,9 @@ apps:
     command: python /snap/randip/current/snap/randip.py
     plugs:
       - network
+      - network-bind
+      - network-control
+      - network-manager
+      - network-observe
+      - ssh-keys
+      - ssh-public-keys
