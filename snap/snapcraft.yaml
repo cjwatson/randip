@@ -17,7 +17,7 @@ parts:
   randip:
     plugin: python
     python-version: python2
-    source: https:github.com/blmvxer/randip.git
+    source: https://github.com/blmvxer/randip.git
     stage-packages:
       - python-paramiko
       - python-stem
