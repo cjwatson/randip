@@ -8,6 +8,8 @@ description: |
 
 confinement: devmode
 
+architectures: [i386, amd64]
+
 parts:
   randip:
     plugin: python
