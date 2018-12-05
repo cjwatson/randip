@@ -22,7 +22,6 @@ parts:
       - python-paramiko
       - python-stem
       - python-requests
-      - python-telnetlib
 
 apps:
   randip:
