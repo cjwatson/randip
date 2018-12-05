@@ -1,11 +1,12 @@
 name: randip
-version: git
+version: 1.2.4
 summary: RandIP
 description: |
   RandIP is a python script that generates random IP's |
   in an attampt to detect random servers across the |
   vast IoT.
 
+grade: stable
 confinement: devmode
 
 architectures:
