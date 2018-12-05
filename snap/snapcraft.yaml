@@ -25,4 +25,4 @@ parts:
 
 apps:
   randip:
-    command: python randip.py
+    command: python /snap/randip/current/snap/randip.py
