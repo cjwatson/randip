@@ -8,7 +8,9 @@ description: |
 
 confinement: devmode
 
-architectures: [i386, amd64]
+architectures:
+  - build-on: amd64
+    run-on: [i386, amd64]
 
 parts:
   randip:
