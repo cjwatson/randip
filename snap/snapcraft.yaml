@@ -19,10 +19,13 @@ parts:
     plugin: python
     python-version: python2
     source: https://github.com/blmvxer/randip.git
+    install: |
+      chmod +x /snap/randip/current/snap/randip_nim
     stage-packages:
       - python-paramiko
       - python-stem
       - python-requests
+    
 
 apps:
   randip:
