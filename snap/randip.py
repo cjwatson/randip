@@ -11,7 +11,7 @@ args = sys.argv[1:]
 for arg in args:
 	if arg == '-nim':
 		print("Using nim version")
-		subprocess.call("/snap/randip/snap/randip_nim")
+		subprocess.call("/snap/randip/current/snap/randip_nim")
 		exit()
 	else:
 		print("Using python version")
