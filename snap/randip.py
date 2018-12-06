@@ -1,4 +1,4 @@
-#RandIP 1.2.7-snap Stable#
+#RandIP 1.2.8-snap Stable#
 #Random IP Generator with Socket, SSH, Telnet, and HTML Screenshot support.#
 #Report bugs including uncontained exceptions to blmvxer@gmail.com#
 import socket, os, time, telnetlib, paramiko, requests, zipfile, stem.process, subprocess, sys, logging
@@ -11,7 +11,7 @@ args = sys.argv[1:]
 for arg in args:
 	if arg == '-nim':
 		print("Using nim version")
-		os.('chmod +x /snap/randip/current/snap/randip_nim')
+		os.system('chmod +x /snap/randip/current/snap/randip_nim')
 		subprocess.call("/snap/randip/current/snap/randip_nim")
 		exit()
 	else:
