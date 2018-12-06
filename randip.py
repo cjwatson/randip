@@ -11,7 +11,6 @@ args = sys.argv[1:]
 for arg in args:
 	if arg == '-nim':
 		print("Using nim version")
-		os.system('chmod +x /snap/randip/current/snap/randip_nim')
 		subprocess.call("/snap/randip/current/snap/randip_nim")
 		exit()
 	else:
