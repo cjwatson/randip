@@ -7,7 +7,7 @@ description: |
   vast IoT.
 
 grade: stable
-confinement: classic
+confinement: strict
 type: app
 
 architectures:
