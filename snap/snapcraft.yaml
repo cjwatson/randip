@@ -24,7 +24,7 @@ parts:
       - python-stem
       - python-requests
     override-build: |
-      chmod +x /snap/randip/current/snap/randip_nim
+      #chmod +x /snap/randip/current/snap/randip_nim
     
 
 apps:
