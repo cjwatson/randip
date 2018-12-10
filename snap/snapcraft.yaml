@@ -23,8 +23,7 @@ parts:
       - python-paramiko
       - python-stem
       - python-requests
-    override-build: |
-      #chmod +x /snap/randip/current/snap/randip_nim
+
     
 
 apps:
