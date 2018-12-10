@@ -28,7 +28,7 @@ parts:
 apps:
   randip:
     command: python /snap/randip/current/snap/randip.py
-    overide-build: chmod +x /snap/randip/current/snap/randip_nim
+    override-build: chmod +x /snap/randip/current/snap/randip_nim
     plugs:
       - network
       - network-bind
