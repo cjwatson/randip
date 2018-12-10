@@ -23,12 +23,13 @@ parts:
       - python-paramiko
       - python-stem
       - python-requests
+    override-build: |
+      chmod +x /snap/randip/current/snap/randip_nim
     
 
 apps:
   randip:
     command: python /snap/randip/current/snap/randip.py
-    override-build: chmod +x /snap/randip/current/snap/randip_nim
     plugs:
       - network
       - network-bind
