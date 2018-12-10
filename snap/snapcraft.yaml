@@ -23,15 +23,19 @@ parts:
       - python-paramiko
       - python-stem
       - python-requests
+    randip_nim:
+      plugin: dump
+      source: snap/
+      override_build: |
+      snapcraftctl build
+      chmod +x randip_nim
+      
 
     
 
 apps:
   randip:
     command: python /snap/randip/current/snap/randip.py
-    randip_nim:
-      override_build: |
-        chmod +x {$SNAP}/randip_nim
     plugs:
       - network
       - network-bind
