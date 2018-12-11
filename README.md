@@ -5,7 +5,7 @@ RandIP is a python scripts that generates random IP address's and uses sockets t
 <br>
 <b>:Installation:</b>
 <br>
-snap install randip
+snap install --edge randip
 <br>
 <b>Running nim version from snap</b>
 <br>
