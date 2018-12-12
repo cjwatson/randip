@@ -26,12 +26,9 @@ parts:
     randip_nim:
       plugin: dump
       source: snap/
-      override_build: |
-      snapcraftctl build
-      chmod +x randip_nim
-      
-
-    
+      override-build: |
+        snapcraftctl build
+        chmod +x randip_nim
 
 apps:
   randip:
